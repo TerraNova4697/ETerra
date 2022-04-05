@@ -4,6 +4,14 @@ buildscript {
         google()
         mavenCentral()
     }
+    ext {
+        ktxVersion = "1.7.0"
+        appCompatVersion = "1.4.1"
+        materialVersion = "1.5.0"
+        constraintLayoutVersion = "2.1.3"
+        firebaseBomVersion = "29.2.1"
+        lifecycleVersion = "2.4.1"
+    }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20"
