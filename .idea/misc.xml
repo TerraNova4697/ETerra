@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/button_background.xml" value="0.22" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/layout/activity_splash_screen.xml" value="0.25" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
       </map>

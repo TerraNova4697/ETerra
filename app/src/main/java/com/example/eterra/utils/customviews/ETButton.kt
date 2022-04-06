@@ -9,5 +9,6 @@ import com.example.eterra.R
 class ETButton(context: Context, attrs: AttributeSet) : AppCompatButton(context, attrs) {
     init {
         typeface = ResourcesCompat.getFont(context, R.font.montserratregular)
+        this.setBackgroundResource(R.drawable.button_background)
     }
 }
