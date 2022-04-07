@@ -6,4 +6,8 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="havent_account">Don`t have an account?</string>
     <string name="register">Register</string>
+    <string name="registration">REGISTRATION</string>
+    <string name="pass_confirm">Confirm password</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="login">Login</string>
 </resources>
