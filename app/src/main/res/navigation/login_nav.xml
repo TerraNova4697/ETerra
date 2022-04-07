@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_passResetFragment"
+            app:destination="@id/passResetFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.eterra.ui.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/passResetFragment"
+        android:name="com.example.eterra.ui.passreset.PassResetFragment"
+        android:label="fragment_pass_reset"
+        tools:layout="@layout/fragment_pass_reset" />
 </navigation>

@@ -16,9 +16,16 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
 
         (activity as AppCompatActivity).supportActionBar?.hide()
 
-        binding.tvRegister.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-            findNavController().navigate(action)
+        binding.apply {
+            tvRegister.setOnClickListener {
+                val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+                findNavController().navigate(action)
+            }
+            tvForgotPass.setOnClickListener {
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToPassResetFragment()
+                )
+            }
         }
     }
 

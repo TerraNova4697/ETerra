@@ -10,4 +10,6 @@
     <string name="pass_confirm">Confirm password</string>
     <string name="have_account">Already have an account?</string>
     <string name="login">Login</string>
+    <string name="forgot_password_text">Enter your email and we will send you an email to reset your password</string>
+    <string name="submit">Submit</string>
 </resources>
