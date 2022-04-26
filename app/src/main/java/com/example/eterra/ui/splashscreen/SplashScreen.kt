@@ -9,8 +9,10 @@ import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.example.eterra.ui.login.MainActivity
 import com.example.eterra.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
+@AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
