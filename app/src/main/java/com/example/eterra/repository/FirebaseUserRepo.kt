@@ -14,6 +14,11 @@ class FirebaseUserRepo @Inject constructor() {
         object Failure: UserRegistrationResult()
     }
 
+    sealed class UserSignInResult() {
+        data class Success(val userId: String, val email: String) : UserSignInResult()
+        object Failure: UserSignInResult()
+    }
+
     fun createUserWithEmail(email: String, pass: String): UserRegistrationResult {
         var isSuccessful = false
         var user: FirebaseUser? = null
@@ -31,6 +36,21 @@ class FirebaseUserRepo @Inject constructor() {
             UserRegistrationResult.Success(user)
         } else {
             UserRegistrationResult.Failure
+        }
+    }
+
+    fun logInUserWithEmail(email: String, pass: String): UserSignInResult {
+        var isSuccessful = false
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    isSuccessful = true
+                }
+            }
+        return if (isSuccessful) {
+            UserSignInResult.Success(FirebaseAuth.getInstance().currentUser!!.uid, email)
+        } else {
+            return UserSignInResult.Failure
         }
     }
 

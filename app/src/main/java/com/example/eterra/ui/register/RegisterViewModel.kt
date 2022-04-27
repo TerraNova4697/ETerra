@@ -17,6 +17,8 @@ class RegisterViewModel @Inject constructor(
     private val firebaseUserRepo: FirebaseUserRepo
 ): ViewModel() {
 
+    // TODO: Rename variables more comprehensive
+
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
@@ -46,8 +48,7 @@ class RegisterViewModel @Inject constructor(
             }
             // TODO: Add progressbar
         }
-        val result = firebaseUserRepo.createUserWithEmail(email, password)
-        when (result) {
+        when (val result = firebaseUserRepo.createUserWithEmail(email, password)) {
             is FirebaseUserRepo.UserRegistrationResult.Success -> {
                 _uiEvent.emit(UiEvent.SignInUser(result.user!!.uid, result.user!!.email!!))
             }
