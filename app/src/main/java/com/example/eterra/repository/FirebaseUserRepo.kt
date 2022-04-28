@@ -19,24 +19,26 @@ class FirebaseUserRepo @Inject constructor() {
         object Failure: UserSignInResult()
     }
 
-    fun createUserWithEmail(email: String, pass: String): UserRegistrationResult {
+    fun createUserWithEmail(email: String, pass: String) {
         var isSuccessful = false
         var user: FirebaseUser? = null
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    Log.d("MyLog", "task is: ${task.isSuccessful}")
                     isSuccessful = true
                     user = task.result!!.user!!
                 }
             }
             .addOnFailureListener {
-                Log.d("Registration", "Oops, smth wrong while registration ${it.message}")
+                Log.d("MyLog", "Oops, smth wrong while registration ${it.message}")
             }
-        return if (isSuccessful) {
-            UserRegistrationResult.Success(user)
-        } else {
-            UserRegistrationResult.Failure
-        }
+//        Log.d("MyLog", "isSuccessful: $isSuccessful")
+//        return if (isSuccessful) {
+//            UserRegistrationResult.Success(user)
+//        } else {
+//            UserRegistrationResult.Failure
+//        }
     }
 
     fun logInUserWithEmail(email: String, pass: String): UserSignInResult {

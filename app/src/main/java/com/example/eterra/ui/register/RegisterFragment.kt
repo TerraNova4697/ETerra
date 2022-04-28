@@ -1,13 +1,9 @@
 package com.example.eterra.ui.register
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentRegisterBinding
 import com.example.eterra.ui.BaseFragment
@@ -18,6 +14,7 @@ import kotlinx.coroutines.flow.collect
 class RegisterFragment: BaseFragment(R.layout.fragment_register) {
 
     private val viewModel: RegisterViewModel by viewModels()
+    private lateinit var binding: FragmentRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +23,7 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentRegisterBinding.bind(view)
+        binding = FragmentRegisterBinding.bind(view)
 
         binding.apply {
             tvLogin.setOnClickListener { requireActivity().onBackPressed() }
@@ -42,27 +39,40 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
         lifecycleScope.launchWhenCreated {
             viewModel.uiEvent.collect { event ->
                 when (event) {
-                    is RegisterViewModel.UiEvent.EnterEmailError -> {
+                    is RegisterViewModel.RegisterUiEvent.EnterEmailError -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                     }
-                    is RegisterViewModel.UiEvent.EnterPassword -> {
+                    is RegisterViewModel.RegisterUiEvent.EnterPassword -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_enter_pass), true)
                     }
-                    is RegisterViewModel.UiEvent.PasswordNotMatch -> {
+                    is RegisterViewModel.RegisterUiEvent.PasswordNotMatch -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_enter_pass_incorrect), true)
                     }
-                    is RegisterViewModel.UiEvent.ValidData -> {
+                    is RegisterViewModel.RegisterUiEvent.ValidData -> {
                         showErrorSnackBar("Data is valid", false)
                     }
-                    is RegisterViewModel.UiEvent.ErrorWhileRegistering -> {
+                    is RegisterViewModel.RegisterUiEvent.ErrorWhileRegistering -> {
+                        hideProgressBar()
                         showErrorSnackBar(resources.getString(R.string.err_msg_try_again), true)
                     }
-                    is RegisterViewModel.UiEvent.SignInUser -> {
+                    is RegisterViewModel.RegisterUiEvent.SignInUser -> {
+                        hideProgressBar()
                         showErrorSnackBar("Registered", false)
+                    }
+                    is RegisterViewModel.RegisterUiEvent.RegisteringInProgress -> {
+                        showProgressBar()
                     }
                 }
             }
         }
+    }
+
+    private fun showProgressBar() {
+         binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 
 }
