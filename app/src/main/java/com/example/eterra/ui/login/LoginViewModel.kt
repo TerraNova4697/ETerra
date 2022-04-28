@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eterra.repository.FirebaseUserRepo
 import com.example.eterra.ui.register.RegisterViewModel
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -31,16 +32,27 @@ class LoginViewModel @Inject constructor(
                 _loginUiEvents.emit(LoginUiEvent.EnterPassword)
                 return@launch
             }
-        }
-        when (val signInResult = firebaseUserRepo.logInUserWithEmail(email, password)) {
-            is FirebaseUserRepo.UserSignInResult.Success -> {
-                _loginUiEvents.emit(LoginUiEvent.SignInSuccess(signInResult.userId, signInResult.email))
+            else -> {
+                _loginUiEvents.emit(LoginUiEvent.SigningInInProgress)
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            singInUser(FirebaseAuth.getInstance().currentUser!!.uid, email)
+                        }
+                    }
+                    .addOnFailureListener {
+                        signInFailed()
+                    }
             }
-            is FirebaseUserRepo.UserSignInResult.Failure -> {
-                _loginUiEvents.emit(LoginUiEvent.SignInFailed)
-            }
         }
+    }
 
+    private fun singInUser(uid: String, email: String) = viewModelScope.launch{
+        _loginUiEvents.emit(LoginUiEvent.SignInSuccess(uid, email))
+    }
+
+    private fun signInFailed() = viewModelScope.launch {
+        _loginUiEvents.emit(LoginUiEvent.SignInFailed)
     }
 
     sealed class LoginUiEvent() {
@@ -48,6 +60,7 @@ class LoginViewModel @Inject constructor(
         object EnterPassword: LoginUiEvent()
         data class SignInSuccess(val userId: String, val email: String): LoginUiEvent()
         object SignInFailed: LoginUiEvent()
+        object SigningInInProgress: LoginUiEvent()
     }
 
 }
