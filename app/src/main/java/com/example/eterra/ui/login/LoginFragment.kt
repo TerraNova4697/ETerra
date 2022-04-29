@@ -1,5 +1,6 @@
 package com.example.eterra.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentLoginBinding
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.SignedInActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -45,6 +47,7 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
             }
         }
 
+        // TODO: Add event manager
         lifecycleScope.launchWhenCreated {
             loginViewModel.loginUiEvents.collect { event ->
                 when (event) {
@@ -56,7 +59,11 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
                     }
                     is LoginViewModel.LoginUiEvent.SignInSuccess -> {
                         hideProgressBar()
-
+                        val intent = Intent(requireContext(), SignedInActivity::class.java)
+                        intent.putExtra("user_id", event.userId)
+                        intent.putExtra("email", event.email)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }
                     is LoginViewModel.LoginUiEvent.SignInFailed -> {
                         hideProgressBar()
