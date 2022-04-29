@@ -4,8 +4,6 @@ import android.text.TextUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eterra.repository.FirebaseUserRepo
-import com.example.eterra.ui.register.RegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val firebaseUserRepo: FirebaseUserRepo,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

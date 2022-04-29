@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eterra.repository.FirebaseUserRepo
+import com.example.eterra.models.User
+import com.example.eterra.repository.FirestoreRepo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val firebaseUserRepo: FirebaseUserRepo
+    private val firestoreRepo: FirestoreRepo
 ): ViewModel() {
 
     // TODO: Rename variables more comprehensive
@@ -31,7 +32,7 @@ class RegisterViewModel @Inject constructor(
         object EnterPassword: RegisterUiEvent()
         object PasswordNotMatch: RegisterUiEvent()
         object ValidData: RegisterUiEvent()
-        data class SignInUser(val user: FirebaseUser): RegisterUiEvent()
+        object SignInUser: RegisterUiEvent()
         object ErrorWhileRegistering: RegisterUiEvent()
         object RegisteringInProgress: RegisterUiEvent()
     }
@@ -56,7 +57,8 @@ class RegisterViewModel @Inject constructor(
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.d("MyLog", "task is: ${task.isSuccessful}")
-                            logInUser(task.result!!.user!!)
+                            val user = User(task.result!!.user!!.uid, email = email)
+                            firestoreRepo.registerUser(this@RegisterViewModel, user)
                         }
                     }
                     .addOnFailureListener {
@@ -67,11 +69,11 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun logInUser(user: FirebaseUser) = viewModelScope.launch{
-        _uiEvent.emit(RegisterUiEvent.SignInUser(user))
+    fun userRegistrationSuccess() = viewModelScope.launch{
+        _uiEvent.emit(RegisterUiEvent.SignInUser)
     }
 
-    private fun registrationError() = viewModelScope.launch {
+    fun registrationError() = viewModelScope.launch {
         _uiEvent.emit(RegisterUiEvent.ErrorWhileRegistering)
     }
 }

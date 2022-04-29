@@ -52,6 +52,7 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Lifecycle + ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentRegisterBinding
 import com.example.eterra.ui.BaseFragment
@@ -57,7 +58,8 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
                     }
                     is RegisterViewModel.RegisterUiEvent.SignInUser -> {
                         hideProgressBar()
-                        showErrorSnackBar("Registered", false)
+                        showErrorSnackBar("Registered successfully", false)
+                        findNavController().navigateUp()
                     }
                     is RegisterViewModel.RegisterUiEvent.RegisteringInProgress -> {
                         showProgressBar()
