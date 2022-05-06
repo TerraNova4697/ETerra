@@ -30,6 +30,8 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
             tvLogin.setOnClickListener { requireActivity().onBackPressed() }
             btnRegister.setOnClickListener {
                 viewModel.onBtnRegisterClicked(
+                    etFName.text.toString(),
+                    etLName.text.toString(),
                     etEmail.text.toString(),
                     etPassword.text.toString(),
                     etPasswordConfirm.text.toString()
@@ -40,6 +42,12 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
         lifecycleScope.launchWhenCreated {
             viewModel.uiEvent.collect { event ->
                 when (event) {
+                    is RegisterViewModel.RegisterUiEvent.EnterFirstNameError -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_first_name), true)
+                    }
+                    is RegisterViewModel.RegisterUiEvent.EnterLastNameError -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name), true)
+                    }
                     is RegisterViewModel.RegisterUiEvent.EnterEmailError -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                     }

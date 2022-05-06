@@ -1,9 +1,12 @@
 package com.example.eterra.ui.login
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eterra.models.User
+import com.example.eterra.repository.FirestoreRepo
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val firestoreRepo: FirestoreRepo,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,29 +38,38 @@ class LoginViewModel @Inject constructor(
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            singInUser(FirebaseAuth.getInstance().currentUser!!.uid, email)
+                            firestoreRepo.getUserDetails(this@LoginViewModel)
+//                            singInUser(FirebaseAuth.getInstance().currentUser!!.uid, email)
+                        } else {
+                            Log.e(this.javaClass.name, task.exception?.message ?: "Untracked exception")
+                            signInFailed(task.exception?.message ?: "Oops, something went wrong")
                         }
                     }
-                    .addOnFailureListener {
-                        signInFailed()
-                    }
+//                    .addOnFailureListener {
+//                        signInFailed()
+//                    }
             }
         }
     }
 
-    private fun singInUser(uid: String, email: String) = viewModelScope.launch{
-        _loginUiEvents.emit(LoginUiEvent.SignInSuccess(uid, email))
+    fun singInUser(user: User) = viewModelScope.launch{
+        _loginUiEvents.emit(LoginUiEvent.SignInSuccess(user))
     }
 
-    private fun signInFailed() = viewModelScope.launch {
-        _loginUiEvents.emit(LoginUiEvent.SignInFailed)
+//    fun singInUser(uid: String, email: String) = viewModelScope.launch{
+//        _loginUiEvents.emit(LoginUiEvent.SignInSuccess(uid, email))
+//    }
+
+    fun signInFailed(exception: String) = viewModelScope.launch {
+        _loginUiEvents.emit(LoginUiEvent.SignInFailed(exception))
     }
 
     sealed class LoginUiEvent() {
         object EnterEmailError: LoginUiEvent()
         object EnterPassword: LoginUiEvent()
-        data class SignInSuccess(val userId: String, val email: String): LoginUiEvent()
-        object SignInFailed: LoginUiEvent()
+//        data class SignInSuccess(val userId: String, val email: String): LoginUiEvent()
+        data class SignInSuccess(val user: User): LoginUiEvent()
+        data class SignInFailed(val exception: String): LoginUiEvent()
         object SigningInInProgress: LoginUiEvent()
     }
 

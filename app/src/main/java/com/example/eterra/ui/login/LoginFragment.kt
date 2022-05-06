@@ -2,6 +2,7 @@ package com.example.eterra.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -42,7 +43,7 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
                     LoginFragmentDirections.actionLoginFragmentToPassResetFragment()
                 )
             }
-            tvLogin.setOnClickListener {
+            btnLogin.setOnClickListener {
                 loginViewModel.onBtnLoginClicked(etEmail.text.toString(), etPassword.text.toString())
             }
         }
@@ -52,22 +53,25 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
             loginViewModel.loginUiEvents.collect { event ->
                 when (event) {
                     is LoginViewModel.LoginUiEvent.EnterEmailError -> {
-
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                     }
                     is LoginViewModel.LoginUiEvent.EnterPassword -> {
-
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_pass), true)
                     }
                     is LoginViewModel.LoginUiEvent.SignInSuccess -> {
                         hideProgressBar()
                         val intent = Intent(requireContext(), SignedInActivity::class.java)
-                        intent.putExtra("user_id", event.userId)
-                        intent.putExtra("email", event.email)
+                        Log.i(this@LoginFragment.javaClass.simpleName, event.user.firstName)
+                        Log.i(this@LoginFragment.javaClass.simpleName, event.user.lastName)
+                        Log.i(this@LoginFragment.javaClass.simpleName, event.user.email)
+//                        intent.putExtra("user_id", event.userId)
+//                        intent.putExtra("email", event.email)
                         startActivity(intent)
                         requireActivity().finish()
                     }
                     is LoginViewModel.LoginUiEvent.SignInFailed -> {
                         hideProgressBar()
-
+                        showErrorSnackBar(event.exception, true)
                     }
                     is LoginViewModel.LoginUiEvent.SigningInInProgress -> {
                         showProgressBar()

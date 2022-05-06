@@ -17,4 +17,8 @@
     <string name="err_msg_enter_pass_incorrect">Password does\'t match</string>
     <string name="err_msg_try_again">Error while registering, please try again later</string>
     <string name="msg_email_sent">Email sent successfully to reset your password!</string>
+    <string name="fist_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="err_msg_enter_first_name">Please enter your first name</string>
+    <string name="err_msg_enter_last_name">Please enter your last name</string>
 </resources>
