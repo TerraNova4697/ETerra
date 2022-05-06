@@ -28,6 +28,8 @@ class RegisterViewModel @Inject constructor(
 
     sealed class RegisterUiEvent() {
         // Registration events
+        object EnterFirstNameError: RegisterUiEvent()
+        object EnterLastNameError: RegisterUiEvent()
         object EnterEmailError: RegisterUiEvent()
         object EnterPassword: RegisterUiEvent()
         object PasswordNotMatch: RegisterUiEvent()
@@ -37,8 +39,16 @@ class RegisterViewModel @Inject constructor(
         object RegisteringInProgress: RegisterUiEvent()
     }
 
-    fun onBtnRegisterClicked(email: String, password: String, passwordConfirm: String) = viewModelScope.launch {
+    fun onBtnRegisterClicked(firstName: String, lastName: String, email: String, password: String, passwordConfirm: String) = viewModelScope.launch {
         when {
+                TextUtils.isEmpty(firstName.trim {it <= ' '}) -> {
+                _uiEvent.emit(RegisterUiEvent.EnterFirstNameError)
+                return@launch
+            }
+            TextUtils.isEmpty(lastName.trim {it <= ' '}) -> {
+                _uiEvent.emit(RegisterUiEvent.EnterLastNameError)
+                return@launch
+            }
             TextUtils.isEmpty(email.trim {it <= ' '}) -> {
                 _uiEvent.emit(RegisterUiEvent.EnterEmailError)
                 return@launch
@@ -57,7 +67,12 @@ class RegisterViewModel @Inject constructor(
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.d("MyLog", "task is: ${task.isSuccessful}")
-                            val user = User(task.result!!.user!!.uid, email = email)
+                            val user = User(
+                                task.result.user?.uid ?: "",
+                                firstName.trim {it <= ' '},
+                                lastName.trim {it <= ' '},
+                                email.trim {it <= ' '}
+                            )
                             firestoreRepo.registerUser(this@RegisterViewModel, user)
                         }
                     }

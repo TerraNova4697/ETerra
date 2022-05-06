@@ -25,4 +25,20 @@ class FirestoreRepo @Inject constructor() {
             }
     }
 
+    //TODO: refactor Firebase classes to repository package and make them suspend
+    // Make use of this article:
+    // https://medium.com/firebase-developers/android-mvvm-firestore-37c3a8d65404
+//    suspend fun registerUser(viewModel: RegisterViewModel, userInfo: User) {
+//        mFireStore.collection("users")
+//            .document(userInfo.id)
+//            .set(userInfo, SetOptions.merge())
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    viewModel.userRegistrationSuccess()
+//                } else {
+//                    viewModel.registrationError()
+//                }
+//            }
+//    }
+
 }

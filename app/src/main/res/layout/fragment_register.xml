@@ -56,6 +56,46 @@
             app:layout_constraintTop_toBottomOf="@id/fl_app_name" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_f_name_l"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="15dp"
+            android:focusable="false"
+            android:hint="@string/fist_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_registration">
+
+            <com.example.eterra.utils.customviews.ETEditText
+                android:id="@+id/et_f_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_l_name_l"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="15dp"
+            android:focusable="false"
+            android:hint="@string/last_name"
+            app:layout_constraintTop_toBottomOf="@id/et_f_name_l">
+
+            <com.example.eterra.utils.customviews.ETEditText
+                android:id="@+id/et_l_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_email_l"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -65,7 +105,7 @@
             android:layout_marginEnd="15dp"
             android:focusable="false"
             android:hint="@string/email"
-            app:layout_constraintTop_toBottomOf="@id/tv_registration">
+            app:layout_constraintTop_toBottomOf="@id/et_l_name_l">
 
             <com.example.eterra.utils.customviews.ETEditText
                 android:id="@+id/et_email"
