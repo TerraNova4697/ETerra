@@ -42,7 +42,7 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
                     LoginFragmentDirections.actionLoginFragmentToPassResetFragment()
                 )
             }
-            tvLogin.setOnClickListener {
+            btnLogin.setOnClickListener {
                 loginViewModel.onBtnLoginClicked(etEmail.text.toString(), etPassword.text.toString())
             }
         }
@@ -52,10 +52,10 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
             loginViewModel.loginUiEvents.collect { event ->
                 when (event) {
                     is LoginViewModel.LoginUiEvent.EnterEmailError -> {
-
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                     }
                     is LoginViewModel.LoginUiEvent.EnterPassword -> {
-
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_pass), true)
                     }
                     is LoginViewModel.LoginUiEvent.SignInSuccess -> {
                         hideProgressBar()
@@ -67,7 +67,7 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
                     }
                     is LoginViewModel.LoginUiEvent.SignInFailed -> {
                         hideProgressBar()
-
+                        showErrorSnackBar(event.exception, true)
                     }
                     is LoginViewModel.LoginUiEvent.SigningInInProgress -> {
                         showProgressBar()

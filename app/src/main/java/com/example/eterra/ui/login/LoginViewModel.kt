@@ -1,6 +1,7 @@
 package com.example.eterra.ui.login
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,11 +36,14 @@ class LoginViewModel @Inject constructor(
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             singInUser(FirebaseAuth.getInstance().currentUser!!.uid, email)
+                        } else {
+                            Log.e(this.javaClass.name, task.exception?.message ?: "Untracked exception")
+                            signInFailed(task.exception?.message ?: "Oops, something went wrong")
                         }
                     }
-                    .addOnFailureListener {
-                        signInFailed()
-                    }
+//                    .addOnFailureListener {
+//                        signInFailed()
+//                    }
             }
         }
     }
@@ -48,15 +52,15 @@ class LoginViewModel @Inject constructor(
         _loginUiEvents.emit(LoginUiEvent.SignInSuccess(uid, email))
     }
 
-    private fun signInFailed() = viewModelScope.launch {
-        _loginUiEvents.emit(LoginUiEvent.SignInFailed)
+    private fun signInFailed(exception: String) = viewModelScope.launch {
+        _loginUiEvents.emit(LoginUiEvent.SignInFailed(exception))
     }
 
     sealed class LoginUiEvent() {
         object EnterEmailError: LoginUiEvent()
         object EnterPassword: LoginUiEvent()
         data class SignInSuccess(val userId: String, val email: String): LoginUiEvent()
-        object SignInFailed: LoginUiEvent()
+        data class SignInFailed(val exception: String): LoginUiEvent()
         object SigningInInProgress: LoginUiEvent()
     }
 
