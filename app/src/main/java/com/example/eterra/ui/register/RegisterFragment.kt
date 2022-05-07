@@ -62,7 +62,7 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
                     }
                     is RegisterViewModel.RegisterUiEvent.ErrorWhileRegistering -> {
                         hideProgressBar()
-                        showErrorSnackBar(resources.getString(R.string.err_msg_try_again), true)
+                        showErrorSnackBar(event.message, true)
                     }
                     is RegisterViewModel.RegisterUiEvent.SignInUser -> {
                         hideProgressBar()
