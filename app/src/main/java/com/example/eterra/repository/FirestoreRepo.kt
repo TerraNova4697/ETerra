@@ -9,6 +9,7 @@ import com.example.eterra.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,45 +18,23 @@ class FirestoreRepo @Inject constructor() {
 
     private val mFireStore = FirebaseFirestore.getInstance()
 
-    fun registerUser(viewModel: RegisterViewModel, userInfo: User) {
-        mFireStore.collection(Constants.USERS)
-            .document(userInfo.id)
-            .set(userInfo, SetOptions.merge())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    viewModel.userRegistrationSuccess()
-                } else {
-                    viewModel.registrationError()
-                }
-            }
+    suspend fun getUserDetails(): GetUserResult {
+        return try {
+            val document = mFireStore
+                .collection(Constants.USERS)
+                .document(getCurrentUserId())
+                .get()
+                .await()
+            val user = document.toObject(User::class.java)!!
+            GetUserResult.Success(user)
+        } catch (e: java.lang.Exception) {
+            Log.e(this.javaClass.simpleName, e.message.toString())
+            GetUserResult.Failure(e.message.toString())
+        }
     }
 
-    fun getUserDetails(viewModel: ViewModel) {
-        mFireStore.collection(Constants.USERS)
-            .document(getCurrentUserId())
-            .get()
-            .addOnSuccessListener { document ->
-                Log.i(this.javaClass.simpleName, document.toString())
-
-                val user = document.toObject(User::class.java)!!
-
-                when (viewModel) {
-                    is LoginViewModel -> {
-                        viewModel.singInUser(user)
-                    }
-                }
-            }
-            .addOnFailureListener { e ->
-                when (viewModel) {
-                    is LoginViewModel -> {
-                        viewModel.signInFailed(e.message!!)
-                    }
-                }
-            }
-    }
-
-    fun getCurrentUserId(): String {
-        var currentUser = FirebaseAuth.getInstance().currentUser
+    private fun getCurrentUserId(): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
         var currentUserId = ""
         if (currentUser != null) {
             currentUserId = currentUser.uid
@@ -66,17 +45,37 @@ class FirestoreRepo @Inject constructor() {
     //TODO: refactor Firebase classes to repository package and make them suspend
     // Make use of this article:
     // https://medium.com/firebase-developers/android-mvvm-firestore-37c3a8d65404
-//    suspend fun registerUser(viewModel: RegisterViewModel, userInfo: User) {
-//        mFireStore.collection("users")
-//            .document(userInfo.id)
-//            .set(userInfo, SetOptions.merge())
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    viewModel.userRegistrationSuccess()
-//                } else {
-//                    viewModel.registrationError()
-//                }
-//            }
-//    }
+    suspend fun registerUser(userInfo: User): RegistrationResult {
+        try {
+            var isSuccessful = false
+            mFireStore
+                .collection(Constants.USERS)
+                .document(userInfo.id)
+                .set(userInfo, SetOptions.merge())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        isSuccessful = true
+                    }
+                }
+                .await()
+            if (isSuccessful) {
+                return RegistrationResult.Success
+            } else {
+                return RegistrationResult.Failure("Oops... something went wrong. Please try again.")
+            }
+        } catch (e: Exception) {
+            return RegistrationResult.Failure(e.message ?: "Oops... something went wrong. Please try again.")
+        }
+    }
+
+    sealed class GetUserResult {
+        data class Success(val user: User): GetUserResult()
+        data class Failure(val errorMessage: String): GetUserResult()
+    }
+
+    sealed class RegistrationResult {
+        object Success: RegistrationResult()
+        data class Failure(val message: String): RegistrationResult()
+    }
 
 }

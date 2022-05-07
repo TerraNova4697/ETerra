@@ -1,13 +1,12 @@
 package com.example.eterra.ui.login
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eterra.models.User
+import com.example.eterra.repository.FirebaseAuthClass
 import com.example.eterra.repository.FirestoreRepo
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val firebaseAuthClass: FirebaseAuthClass,
     private val firestoreRepo: FirestoreRepo,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -35,19 +35,23 @@ class LoginViewModel @Inject constructor(
             }
             else -> {
                 _loginUiEvents.emit(LoginUiEvent.SigningInInProgress)
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            firestoreRepo.getUserDetails(this@LoginViewModel)
-//                            singInUser(FirebaseAuth.getInstance().currentUser!!.uid, email)
-                        } else {
-                            Log.e(this.javaClass.name, task.exception?.message ?: "Untracked exception")
-                            signInFailed(task.exception?.message ?: "Oops, something went wrong")
+                val loginResult = firebaseAuthClass.loginUser(email.trim{it <= ' '}, password.trim{it <= ' '})
+                when (loginResult) {
+                    is FirebaseAuthClass.LoginResult.Success -> {
+                        val getUserResult = firestoreRepo.getUserDetails()
+                        when (getUserResult) {
+                            is FirestoreRepo.GetUserResult.Success -> {
+                                singInUser(getUserResult.user)
+                            }
+                            is FirestoreRepo.GetUserResult.Failure -> {
+                                signInFailed(getUserResult.errorMessage)
+                            }
                         }
                     }
-//                    .addOnFailureListener {
-//                        signInFailed()
-//                    }
+                    is FirebaseAuthClass.LoginResult.Failure -> {
+                        signInFailed(loginResult.errorMessage)
+                    }
+                }
             }
         }
     }
@@ -55,10 +59,6 @@ class LoginViewModel @Inject constructor(
     fun singInUser(user: User) = viewModelScope.launch{
         _loginUiEvents.emit(LoginUiEvent.SignInSuccess(user))
     }
-
-//    fun singInUser(uid: String, email: String) = viewModelScope.launch{
-//        _loginUiEvents.emit(LoginUiEvent.SignInSuccess(uid, email))
-//    }
 
     fun signInFailed(exception: String) = viewModelScope.launch {
         _loginUiEvents.emit(LoginUiEvent.SignInFailed(exception))
