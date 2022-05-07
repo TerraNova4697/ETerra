@@ -1,15 +1,18 @@
 package com.example.eterra.ui.login
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eterra.models.User
 import com.example.eterra.repository.FirebaseAuthClass
 import com.example.eterra.repository.FirestoreRepo
+import com.example.eterra.repository.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,8 +20,17 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val firebaseAuthClass: FirebaseAuthClass,
     private val firestoreRepo: FirestoreRepo,
+    private val preferencesManager: PreferencesManager,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val userName = preferencesManager.userPreferencesFlow
+
+    init {
+        viewModelScope.launch {
+            Log.i("MyTag", userName.first().name)
+        }
+    }
 
     private val _loginUiEvents = MutableSharedFlow<LoginUiEvent>()
     val loginUiEvents = _loginUiEvents.asSharedFlow()
@@ -41,6 +53,7 @@ class LoginViewModel @Inject constructor(
                         val getUserResult = firestoreRepo.getUserDetails()
                         when (getUserResult) {
                             is FirestoreRepo.GetUserResult.Success -> {
+                                preferencesManager.saveUserName("${getUserResult.user.firstName} ${getUserResult.user.lastName}")
                                 singInUser(getUserResult.user)
                             }
                             is FirestoreRepo.GetUserResult.Failure -> {
