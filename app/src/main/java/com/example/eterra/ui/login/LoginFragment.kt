@@ -1,6 +1,8 @@
 package com.example.eterra.ui.login
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,6 +14,7 @@ import com.example.eterra.R
 import com.example.eterra.databinding.FragmentLoginBinding
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.SignedInActivity
+import com.example.eterra.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
