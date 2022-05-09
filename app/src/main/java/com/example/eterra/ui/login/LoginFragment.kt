@@ -67,8 +67,7 @@ class LoginFragment: BaseFragment(R.layout.fragment_login) {
                         Log.i(this@LoginFragment.javaClass.simpleName, event.user.firstName)
                         Log.i(this@LoginFragment.javaClass.simpleName, event.user.lastName)
                         Log.i(this@LoginFragment.javaClass.simpleName, event.user.email)
-//                        intent.putExtra("user_id", event.userId)
-//                        intent.putExtra("email", event.email)
+                        intent.putExtra("profile_completed", event.user.profileCompleted)
                         startActivity(intent)
                         requireActivity().finish()
                     }
