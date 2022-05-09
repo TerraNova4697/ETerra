@@ -1,5 +1,9 @@
 package com.example.eterra.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class User(
     val id: String = "",
     val firstName: String = "",
@@ -10,4 +14,4 @@ data class User(
     val gender: String = "",
     val profileCompleted: Int = 0
 
-)
+): Parcelable
