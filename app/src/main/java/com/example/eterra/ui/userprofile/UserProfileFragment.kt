@@ -6,21 +6,24 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentUserProfileBinding
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.utils.GlideLoader
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.io.IOException
 
 @AndroidEntryPoint
 class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
 
+    private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,30 +39,48 @@ class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
             etFirstName.setText(arguments?.getString("firstName"))
             etLastName.setText(arguments?.getString("lastName"))
             etEmail.setText(arguments?.getString("email"))
-            etMobileNumber.setText(arguments?.getLong("mobile").toString())
+            val mobileNumber = arguments?.getLong("mobile").toString()
+            etMobileNumber.setText(if (mobileNumber.length > 1) mobileNumber else "")
             rbFemale.isChecked = arguments?.getString("gender") == "female"
 
-            ivUserPhoto.setOnClickListener {
-                // TODO: Delegate to ViewModel
-                when {
-                    ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        showImageChooser()
-                    }
-                    shouldShowRequestPermissionRationale(
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) -> {
-                        Log.i(this@UserProfileFragment.javaClass.simpleName, "should show request permission rationale")
-                        showErrorSnackBar("should show request permission rationale", false)
-                        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            btnSubmit.setOnClickListener {
+                userProfileViewModel.onBtnSubmitClicked(binding.etMobileNumber.text.toString())
+            }
 
+            ivUserPhoto.setOnClickListener {
+                userProfileViewModel.onIvUserPhotoClicked()
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            userProfileViewModel.userProfileEvents.collect { event ->
+                when (event) {
+                    is UserProfileViewModel.UserProfileEvents.EnterMobileNumberError -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_mobile_number), true)
                     }
-                    else -> {
-                        requestPermissionLauncher.launch(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                        )
+                    is UserProfileViewModel.UserProfileEvents.ProfileCompleted -> {
+                        showErrorSnackBar("Profile completed", false)
+                    }
+                    is UserProfileViewModel.UserProfileEvents.PickImage -> {
+                        when {
+                            ContextCompat.checkSelfPermission(
+                                requireContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            ) == PackageManager.PERMISSION_GRANTED -> {
+                                showImageChooser()
+                            }
+                            shouldShowRequestPermissionRationale(
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            ) -> {
+                                showErrorSnackBar("The app needs permission to pick photo", false)
+                                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+
+                            }
+                            else -> {
+                                requestPermissionLauncher.launch(
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                )
+                            }
+                        }
                     }
                 }
             }
