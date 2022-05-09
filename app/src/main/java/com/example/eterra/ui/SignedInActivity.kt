@@ -34,4 +34,8 @@ class SignedInActivity : AppCompatActivity() {
             throw Exception("User does not exist")
         }
     }
+
+    companion object {
+        const val PERMISSION_REQUEST_CAMERA = 1
+    }
 }
