@@ -14,4 +14,7 @@
     
     <color name="colorSnackbarSuccess">#8BC34A</color>
     <color name="colorSnackbarError">#F72400</color>
+
+    <color name="colorLightGrey">#F2F1F1</color>
+    <color name="colorSecondaryText">#989898</color>
 </resources>
