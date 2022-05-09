@@ -21,5 +21,20 @@
         <action
             android:id="@+id/action_userProfileFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="firstName"
+            app:argType="string" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="mobile"
+            app:argType="long" />
+        <argument
+            android:name="gender"
+            app:argType="string" />
+        <argument
+            android:name="lastName"
+            app:argType="string" />
     </fragment>
 </navigation>

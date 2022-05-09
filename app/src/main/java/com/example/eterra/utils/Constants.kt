@@ -5,5 +5,5 @@ object Constants {
     const val USERS: String = "users"
     const val PREFERENCES_TAG = "PreferencesManager"
     const val ETERRA_PREFERENCES = "ETerraPreferences"
-
+    const val EXTRA_USER_DETAILS = "extra_user_details"
 }
