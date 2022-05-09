@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/actionbar_background.xml" value="0.31296296296296294" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/button_background.xml" value="0.22" />
+        <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/drawable_gender_tab_selector.xml" value="0.184" />
+        <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/drawable_gender_tab_text_color_selector.xml" value="0.184" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/gradient_drawable.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/drawable/user_image_background.xml" value="0.184" />
         <entry key="..\:/Users/nikit/AndroidStudioProjects/ETerra/app/src/main/res/layout/activity_main.xml" value="0.2" />
