@@ -33,6 +33,32 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun updateUserDetails(userHashMap: HashMap<String, Any>): UpdateUserDetails {
+        return try {
+            var isSuccessful = false
+            mFireStore
+                .collection(Constants.USERS)
+                .document(getCurrentUserId())
+                .update(userHashMap)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        isSuccessful = true
+                    } else {
+                        Log.e(this.javaClass.simpleName, task.exception?.message ?: "Error while updating")
+                    }
+                }
+                .await()
+            if (isSuccessful) {
+                return UpdateUserDetails.Success
+            } else {
+                return UpdateUserDetails.Failure("Error while updating")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return UpdateUserDetails.Failure(e.message ?: "Error while updating")
+        }
+    }
+
     private fun getCurrentUserId(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser
         var currentUserId = ""
@@ -66,6 +92,11 @@ class FirestoreRepo @Inject constructor() {
         } catch (e: Exception) {
             return RegistrationResult.Failure(e.message ?: "Oops... something went wrong. Please try again.")
         }
+    }
+
+    sealed class UpdateUserDetails {
+        object Success: UpdateUserDetails()
+        data class Failure(val message: String): UpdateUserDetails()
     }
 
     sealed class GetUserResult {

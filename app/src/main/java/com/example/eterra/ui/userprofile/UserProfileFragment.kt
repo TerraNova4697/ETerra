@@ -12,16 +12,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentUserProfileBinding
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.utils.Constants
 import com.example.eterra.utils.GlideLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.io.IOException
 
 @AndroidEntryPoint
-class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
+class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
 
     private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
@@ -44,7 +46,10 @@ class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
             rbFemale.isChecked = arguments?.getString("gender") == "female"
 
             btnSubmit.setOnClickListener {
-                userProfileViewModel.onBtnSubmitClicked(binding.etMobileNumber.text.toString())
+                userProfileViewModel.onBtnSubmitClicked(
+                    mobileNumber = binding.etMobileNumber.text.toString(),
+                    gender = if (binding.rbMale.isChecked) Constants.MALE else Constants.FEMALE
+                )
             }
 
             ivUserPhoto.setOnClickListener {
@@ -54,10 +59,14 @@ class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
         lifecycleScope.launchWhenCreated {
             userProfileViewModel.userProfileEvents.collect { event ->
                 when (event) {
+                    is UserProfileViewModel.UserProfileEvents.ShowProgressDialog -> {
+                        showProgressBar()
+                    }
                     is UserProfileViewModel.UserProfileEvents.EnterMobileNumberError -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_enter_mobile_number), true)
                     }
                     is UserProfileViewModel.UserProfileEvents.ProfileCompleted -> {
+
                         showErrorSnackBar("Profile completed", false)
                     }
                     is UserProfileViewModel.UserProfileEvents.PickImage -> {
@@ -81,6 +90,14 @@ class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
                                 )
                             }
                         }
+                    }
+                    is UserProfileViewModel.UserProfileEvents.NavigateBack -> {
+                        hideProgressBar()
+                        findNavController().navigateUp()
+                    }
+                    is UserProfileViewModel.UserProfileEvents.ErrorWhileUpdating -> {
+                        hideProgressBar()
+                        showErrorSnackBar(event.message, true)
                     }
                 }
             }
@@ -121,6 +138,14 @@ class UserProfileFragment (): BaseFragment(R.layout.fragment_user_profile) {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
         pickImageResultLauncher.launch(galleryIntent)
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 
 }

@@ -11,6 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignedInActivity : AppCompatActivity() {
+
+    private lateinit var user: User
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signed_in)
@@ -19,7 +22,9 @@ class SignedInActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.signed_in_nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)
+        if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
+            user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
+        }
 
         if (user != null && user.profileCompleted == 0) {
             val action = MainFragmentDirections.actionMainFragmentToUserProfileFragment(
@@ -33,9 +38,5 @@ class SignedInActivity : AppCompatActivity() {
         } else if (user == null) {
             throw Exception("User does not exist")
         }
-    }
-
-    companion object {
-        const val PERMISSION_REQUEST_CAMERA = 1
     }
 }
