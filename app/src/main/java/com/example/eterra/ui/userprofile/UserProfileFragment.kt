@@ -2,11 +2,14 @@ package com.example.eterra.ui.userprofile
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -27,6 +30,7 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
 
     private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
+    private lateinit var selectedImageUri: Uri
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +48,10 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
             val mobileNumber = arguments?.getLong("mobile").toString()
             etMobileNumber.setText(if (mobileNumber.length > 1) mobileNumber else "")
             rbFemale.isChecked = arguments?.getString("gender") == "female"
+            if (arguments?.getString("image")!!.isNotEmpty()) {
+                GlideLoader(requireContext()).loadUserPicture(Uri.parse(arguments?.getString("image")), binding.ivUserPhoto)
+
+            }
 
             btnSubmit.setOnClickListener {
                 userProfileViewModel.onBtnSubmitClicked(
@@ -82,7 +90,6 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
                             ) -> {
                                 showErrorSnackBar("The app needs permission to pick photo", false)
                                 requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
                             }
                             else -> {
                                 requestPermissionLauncher.launch(
@@ -98,6 +105,13 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
                     is UserProfileViewModel.UserProfileEvents.ErrorWhileUpdating -> {
                         hideProgressBar()
                         showErrorSnackBar(event.message, true)
+                    }
+                    is UserProfileViewModel.UserProfileEvents.PlaceImage -> {
+//                        selectedImageUri = event.imageUri
+                        GlideLoader(requireContext()).loadUserPicture(event.imageUri, binding.ivUserPhoto)
+                    }
+                    is UserProfileViewModel.UserProfileEvents.HideProgressDialog -> {
+                        hideProgressBar()
                     }
                 }
             }
@@ -119,9 +133,11 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
         if (result.resultCode == Activity.RESULT_OK) {
             if (result.data != null) {
                 try {
-                    val selectedImageUri = result.data!!.data
+                    selectedImageUri = result.data!!.data!!
                     if (selectedImageUri != null) {
-                        GlideLoader(requireContext()).loadUserPicture(selectedImageUri, binding.ivUserPhoto)
+                        val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(requireActivity().contentResolver.getType(selectedImageUri))
+//                        GlideLoader(requireContext()).loadUserPicture(selectedImageUri, binding.ivUserPhoto)
+                        userProfileViewModel.onImagePicked(selectedImageUri, extension ?: "")
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -146,6 +162,11 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
 
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as AppCompatActivity).supportActionBar?.show()
     }
 
 }
