@@ -32,7 +32,8 @@ class SignedInActivity : AppCompatActivity() {
                 lastName = user.lastName,
                 email = user.email,
                 mobile = user.mobile,
-                gender = user.gender
+                gender = user.gender,
+                image = user.image
             )
             navController.navigate(action)
         } else if (user == null) {

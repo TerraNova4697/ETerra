@@ -36,5 +36,8 @@
         <argument
             android:name="lastName"
             app:argType="string" />
+        <argument
+            android:name="image"
+            app:argType="string" />
     </fragment>
 </navigation>
