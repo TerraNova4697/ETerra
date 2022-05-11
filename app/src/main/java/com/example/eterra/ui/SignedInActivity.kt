@@ -6,7 +6,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.eterra.R
 import com.example.eterra.models.User
-import com.example.eterra.ui.main.MainFragmentDirections
+import com.example.eterra.ui.dashboard.DashboardFragmentDirections
 import com.example.eterra.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,9 +27,8 @@ class SignedInActivity : AppCompatActivity() {
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
             user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
         }
-
-        if (user != null && user.profileCompleted == 0) {
-            val action = MainFragmentDirections.actionMainFragmentToUserProfileFragment(
+        if (user.profileCompleted == 0) {
+            val action = DashboardFragmentDirections.actionItemDashboardToUserProfileFragment(
                 firstName = user.firstName,
                 lastName = user.lastName,
                 email = user.email,
@@ -38,8 +37,6 @@ class SignedInActivity : AppCompatActivity() {
                 image = user.image
             )
             navController.navigate(action)
-        } else if (user == null) {
-            throw Exception("User does not exist")
         }
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)

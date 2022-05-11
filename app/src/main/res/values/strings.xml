@@ -30,4 +30,10 @@
     <string name="err_msg_image_selection_failed">Error while picking image</string>
     <string name="err_msg_enter_mobile_number">Please enter mobile number</string>
     <string name="home">Home</string>
+
+    <string name="double_click">Double click to exit</string>
+    <string name="products">Products</string>
+    <string name="orders">Orders</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="settings">Settings</string>
 </resources>

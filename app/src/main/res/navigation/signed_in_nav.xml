@@ -3,21 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/signed_in_nav"
-    app:startDestination="@id/item_home">
+    app:startDestination="@id/item_dashboard">
     <fragment
-        android:id="@+id/item_home"
-        android:name="com.example.eterra.ui.main.MainFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_main">
-        <action
-            android:id="@+id/action_mainFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
-    </fragment>
+        android:id="@+id/item_products"
+        android:name="com.example.eterra.ui.products.ProductsFragment"
+        android:label="@string/products"
+        tools:layout="@layout/fragment_products"/>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.eterra.ui.userprofile.UserProfileFragment"
-        android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" >
+        android:label="@string/title_complete_profile"
+        tools:layout="@layout/fragment_user_profile">
         <argument
             android:name="firstName"
             app:argType="string" />
@@ -38,13 +34,25 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/item_notifications"
-        android:name="com.example.eterra.ui.notifications.NotificationsFragment"
-        android:label="Notifications"
-        tools:layout="@layout/notifications_fragment" />
+        android:id="@+id/item_orders"
+        android:name="com.example.eterra.ui.notifications.OrdersFragment"
+        android:label="@string/orders"
+        tools:layout="@layout/orders_fragment" />
     <fragment
         android:id="@+id/item_dashboard"
         android:name="com.example.eterra.ui.dashboard.DashboardFragment"
-        android:label="Dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="@string/dashboard"
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_item_dashboard_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_item_dashboard_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.eterra.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
