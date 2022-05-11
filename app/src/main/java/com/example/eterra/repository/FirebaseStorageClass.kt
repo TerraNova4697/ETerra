@@ -34,36 +34,6 @@ class FirebaseStorageClass @Inject constructor() {
 
             uploadedImageUri = taskSnapshot.metadata!!.reference!!.downloadUrl.await()
 
-
-//            val taskSnapshot = profileImgReference
-//                .putFile(selectedImageUri)
-//                .addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        task.result.metadata!!.reference!!.downloadUrl
-//                            .addOnCompleteListener { task ->
-//                                if (task.isSuccessful) {
-//                                    Log.d(
-//                                        this@FirebaseStorageClass.javaClass.simpleName,
-//                                        "URI: ${task.result}"
-//                                    )
-//                                    isSuccessful = true
-//                                    uploadedImageUri = task.result
-//                                } else {
-//                                    Log.d(
-//                                        this@FirebaseStorageClass.javaClass.simpleName,
-//                                        "Exception: ${task.exception!!.message!!}"
-//                                    )
-//                                }
-//                            }
-//                    } else {
-//                        Log.d(
-//                            this@FirebaseStorageClass.javaClass.simpleName,
-//                            "Exception: ${task.exception!!.message!!}"
-//                        )
-//                    }
-//
-//                }.await()
-
             Log.e(
                 this@FirebaseStorageClass.javaClass.simpleName,
                 "Image URI: $uploadedImageUri"
