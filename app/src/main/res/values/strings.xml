@@ -29,4 +29,5 @@
     <string name="content_description">image</string>
     <string name="err_msg_image_selection_failed">Error while picking image</string>
     <string name="err_msg_enter_mobile_number">Please enter mobile number</string>
+    <string name="home">Home</string>
 </resources>
