@@ -9,6 +9,7 @@ import com.example.eterra.models.User
 import com.example.eterra.repository.FirebaseAuthClass
 import com.example.eterra.repository.FirestoreRepo
 import com.example.eterra.repository.PreferencesManager
+import com.example.eterra.utils.capitalized
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,11 +25,11 @@ class LoginViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val userName = preferencesManager.userPreferencesFlow
+    private val user = preferencesManager.userPreferencesFlow
 
     init {
         viewModelScope.launch {
-            Log.i("MyTag", userName.first().name)
+            Log.i("MyTag", user.first().name)
         }
     }
 
@@ -53,7 +54,16 @@ class LoginViewModel @Inject constructor(
                         val getUserResult = firestoreRepo.getUserDetails()
                         when (getUserResult) {
                             is FirestoreRepo.GetUserResult.Success -> {
-                                preferencesManager.saveUserName("${getUserResult.user.firstName} ${getUserResult.user.lastName}")
+                                val name = "${getUserResult.user.firstName} ${getUserResult.user.lastName}"
+                                val gender = getUserResult.user.gender.capitalized()
+                                val mobileNumber = getUserResult.user.mobile.toString()
+                                preferencesManager.saveUser(
+                                    name = name,
+                                    gender = gender,
+                                    email = getUserResult.user.email,
+                                    mobileNumber = mobileNumber,
+                                    imageUrl = getUserResult.user.image
+                                )
                                 singInUser(getUserResult.user)
                             }
                             is FirestoreRepo.GetUserResult.Failure -> {
