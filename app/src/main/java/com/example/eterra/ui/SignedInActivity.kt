@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SignedInActivity : AppCompatActivity() {
 
     private lateinit var user: User
+    lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class SignedInActivity : AppCompatActivity() {
             navController.navigate(action)
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
     }
 }
