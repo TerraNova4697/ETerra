@@ -48,9 +48,8 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
             val mobileNumber = arguments?.getLong("mobile").toString()
             etMobileNumber.setText(if (mobileNumber.length > 1) mobileNumber else "")
             rbFemale.isChecked = arguments?.getString("gender") == "female"
-            if (arguments?.getString("image")!!.isNotEmpty()) {
+            if (arguments?.getString("image")!! != "") {
                 GlideLoader(requireContext()).loadUserPicture(Uri.parse(arguments?.getString("image")), binding.ivUserPhoto)
-
             }
 
             btnSubmit.setOnClickListener {

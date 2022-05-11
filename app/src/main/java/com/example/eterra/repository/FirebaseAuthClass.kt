@@ -59,4 +59,8 @@ class FirebaseAuthClass @Inject constructor() {
         data class Failure(val message: String): AuthorizationResult()
     }
 
+    suspend fun logOutUser() {
+        FirebaseAuth.getInstance().signOut()
+    }
+
 }
