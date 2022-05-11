@@ -3,10 +3,12 @@ package com.example.eterra.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.example.eterra.R
 import com.example.eterra.models.User
 import com.example.eterra.ui.main.MainFragmentDirections
 import com.example.eterra.utils.Constants
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,5 +41,8 @@ class SignedInActivity : AppCompatActivity() {
         } else if (user == null) {
             throw Exception("User does not exist")
         }
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        NavigationUI.setupWithNavController(bottomNavigationView, navController)
     }
 }
