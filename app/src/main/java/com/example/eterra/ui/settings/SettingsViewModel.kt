@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eterra.models.User
+import com.example.eterra.repository.FirebaseAuthClass
 import com.example.eterra.repository.FirebaseStorageClass
 import com.example.eterra.repository.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val firebaseStorageClass: FirebaseStorageClass,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val firebaseAuthClass: FirebaseAuthClass
 ): ViewModel() {
 
     private val userFlow = preferencesManager.userPreferencesFlow
@@ -33,16 +35,27 @@ class SettingsViewModel @Inject constructor(
 //    }
 
     fun onGetUserDetails() = viewModelScope.launch{
-        val name = userFlow.first().name
+        val firstName = userFlow.first().firstName
+        val lastName = userFlow.first().lastName
         val gender = userFlow.first().gender
         val email = userFlow.first().email
         val mobileNumber = userFlow.first().mobileNumber
         val imageUrl = userFlow.first().imageUrl
-        Log.d(this@SettingsViewModel.javaClass.simpleName, "$name, $gender, $email, $mobileNumber")
-        _settingsUiEvents.emit(SettingsUiEvent.UserData(name, gender, email, mobileNumber, imageUrl))
+        _settingsUiEvents.emit(SettingsUiEvent.UserData(firstName, lastName, gender, email, mobileNumber, imageUrl))
+    }
+
+    fun onLogoutClicked() = viewModelScope.launch{
+        firebaseAuthClass.logOutUser()
+        _settingsUiEvents.emit(SettingsUiEvent.UserLoggedOut)
+    }
+
+    fun onEditClicked() = viewModelScope.launch {
+        _settingsUiEvents.emit(SettingsUiEvent.NavigateToProfileFragment)
     }
 
     sealed class SettingsUiEvent {
-        data class UserData(val name: String, val gender: String, val email: String, val mobileNumber: String, val imageUrl: String): SettingsUiEvent()
+        data class UserData(val firstName: String, val lastName: String, val gender: String, val email: String, val mobileNumber: String, val imageUrl: String): SettingsUiEvent()
+        object UserLoggedOut: SettingsUiEvent()
+        object NavigateToProfileFragment: SettingsUiEvent()
     }
 }

@@ -9,6 +9,8 @@ import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.example.eterra.ui.login.MainActivity
 import com.example.eterra.R
+import com.example.eterra.ui.SignedInActivity
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -30,7 +32,11 @@ class SplashScreen : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             delay(1000)
-            startActivity(Intent(this@SplashScreen, MainActivity::class.java))
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                startActivity(Intent(this@SplashScreen, SignedInActivity::class.java))
+            } else {
+                startActivity(Intent(this@SplashScreen, MainActivity::class.java))
+            }
             finish()
         }
     }

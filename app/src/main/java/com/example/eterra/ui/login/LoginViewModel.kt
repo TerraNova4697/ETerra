@@ -27,12 +27,6 @@ class LoginViewModel @Inject constructor(
 
     private val user = preferencesManager.userPreferencesFlow
 
-    init {
-        viewModelScope.launch {
-            Log.i("MyTag", user.first().name)
-        }
-    }
-
     private val _loginUiEvents = MutableSharedFlow<LoginUiEvent>()
     val loginUiEvents = _loginUiEvents.asSharedFlow()
 
@@ -54,11 +48,11 @@ class LoginViewModel @Inject constructor(
                         val getUserResult = firestoreRepo.getUserDetails()
                         when (getUserResult) {
                             is FirestoreRepo.GetUserResult.Success -> {
-                                val name = "${getUserResult.user.firstName} ${getUserResult.user.lastName}"
                                 val gender = getUserResult.user.gender.capitalized()
                                 val mobileNumber = getUserResult.user.mobile.toString()
                                 preferencesManager.saveUser(
-                                    name = name,
+                                    firstName = getUserResult.user.firstName,
+                                    lastName = getUserResult.user.lastName,
                                     gender = gender,
                                     email = getUserResult.user.email,
                                     mobileNumber = mobileNumber,

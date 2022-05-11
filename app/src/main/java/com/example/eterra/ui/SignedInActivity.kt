@@ -27,17 +27,17 @@ class SignedInActivity : AppCompatActivity() {
 
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
             user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
-        }
-        if (user.profileCompleted == 0) {
-            val action = DashboardFragmentDirections.actionItemDashboardToUserProfileFragment(
-                firstName = user.firstName,
-                lastName = user.lastName,
-                email = user.email,
-                mobile = user.mobile,
-                gender = user.gender,
-                image = user.image
-            )
-            navController.navigate(action)
+            if (user.profileCompleted == 0) {
+                val action = DashboardFragmentDirections.actionItemDashboardToUserProfileFragment(
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    email = user.email,
+                    mobile = user.mobile,
+                    gender = user.gender,
+                    image = user.image
+                )
+                navController.navigate(action)
+            }
         }
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
