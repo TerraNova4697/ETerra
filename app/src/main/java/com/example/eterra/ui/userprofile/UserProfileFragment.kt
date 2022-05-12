@@ -2,14 +2,16 @@ package com.example.eterra.ui.userprofile
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +21,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentUserProfileBinding
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.SignedInActivity
+import com.example.eterra.ui.settings.SettingsFragment
 import com.example.eterra.utils.Constants
 import com.example.eterra.utils.GlideLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,12 +35,18 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
     private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
     private lateinit var selectedImageUri: Uri
+    private lateinit var navFrom: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentUserProfileBinding.bind(view)
+        navFrom = arguments?.getString("navFrom")?: Constants.SETTINGS_FRAGMENT
+        Log.i(this.javaClass.simpleName, navFrom)
 
         (activity as AppCompatActivity).supportActionBar?.hide()
+        (activity as SignedInActivity).bottomNavigationView.visibility = View.GONE
+
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
 
         binding.apply {
             etFirstName.isEnabled = false
@@ -165,7 +175,15 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
 
     override fun onDestroy() {
         super.onDestroy()
-        (activity as AppCompatActivity).supportActionBar?.show()
+
+    }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (navFrom == Constants.SETTINGS_FRAGMENT) {
+                findNavController().navigateUp()
+            }
+        }
     }
 
 }

@@ -31,14 +31,23 @@ class SettingsFragment(): BaseFragment(R.layout.fragment_settings) {
 
         (activity as AppCompatActivity).supportActionBar?.hide()
 
-        (activity as SignedInActivity).bottomNavigationView.visibility = View.GONE
 
         binding.apply {
             btnLogout.setOnClickListener {
                 settingsViewModel.onLogoutClicked()
             }
             tvEdit.setOnClickListener {
-                settingsViewModel.onEditClicked()
+                val action = SettingsFragmentDirections.actionSettingsFragmentToUserProfileFragment(
+                    firstName = user.firstName,
+                    email = user.email,
+                    mobile = user.mobile,
+                    gender = user.gender.lowercase(),
+                    lastName = user.lastName,
+                    image = user.image,
+                    navFrom = this@SettingsFragment.javaClass.simpleName
+                )
+                findNavController().navigate(action)
+//                settingsViewModel.onEditClicked()
             }
         }
 
@@ -70,21 +79,17 @@ class SettingsFragment(): BaseFragment(R.layout.fragment_settings) {
                         requireActivity().finish()
                     }
                     is SettingsViewModel.SettingsUiEvent.NavigateToProfileFragment -> {
-                        val action = SettingsFragmentDirections.actionSettingsFragmentToUserProfileFragment(
-                            firstName = user.firstName,
-                            email = user.email,
-                            mobile = user.mobile,
-                            gender = user.gender.lowercase(),
-                            lastName = user.lastName,
-                            image = user.image
-                        )
-                        findNavController().navigate(action)
+
                     }
                 }
             }
         }
 
         getUserDetails()
+    }
+
+    private fun navigateToProfileFragment() {
+
     }
 
     override fun onDestroy() {

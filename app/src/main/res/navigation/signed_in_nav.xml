@@ -36,6 +36,9 @@
         <argument
             android:name="image"
             app:argType="string" />
+        <argument
+            android:name="navFrom"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/item_orders"

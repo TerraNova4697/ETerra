@@ -2,8 +2,11 @@ package com.example.eterra.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.eterra.R
 import com.example.eterra.models.User
 import com.example.eterra.ui.dashboard.DashboardFragmentDirections
@@ -16,6 +19,7 @@ class SignedInActivity : AppCompatActivity() {
 
     private lateinit var user: User
     lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +27,9 @@ class SignedInActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.signed_in_nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.findNavController()
+
+        setupActionBarWithNavController(navController)
 
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
             user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
@@ -34,7 +40,8 @@ class SignedInActivity : AppCompatActivity() {
                     email = user.email,
                     mobile = user.mobile,
                     gender = user.gender,
-                    image = user.image
+                    image = user.image,
+                    navFrom = this.javaClass.simpleName
                 )
                 navController.navigate(action)
             }
@@ -42,5 +49,9 @@ class SignedInActivity : AppCompatActivity() {
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
