@@ -54,7 +54,7 @@ class UserProfileViewModel @Inject constructor(
 
     fun onImagePicked(selectedImageUri: Uri, imageExtension: String) = viewModelScope.launch {
         _userProfileEvents.emit(UserProfileEvents.ShowProgressDialog)
-        val uploadResult = firebaseStorageClass.uploadProfileImage(selectedImageUri, imageExtension)
+        val uploadResult = firebaseStorageClass.uploadProfileImage(selectedImageUri, imageExtension, Constants.USER_PROFILE_IMAGE)
         when (uploadResult) {
             is FirebaseStorageClass.UploadProfileImage.Success -> {
                 val userHashMap = HashMap<String, Any>()
@@ -68,11 +68,9 @@ class UserProfileViewModel @Inject constructor(
                         _userProfileEvents.emit(UserProfileEvents.ErrorWhileUpdating(updateResult.message))
                     }
                 }
-                Log.d(this@UserProfileViewModel.javaClass.simpleName, "Image URI: ${uploadResult.imageUri}")
                 _userProfileEvents.emit(UserProfileEvents.PlaceImage(uploadResult.imageUri))
             }
             is FirebaseStorageClass.UploadProfileImage.Failure -> {
-                Log.d(this@UserProfileViewModel.javaClass.simpleName, "Error: ${uploadResult.message}")
                 _userProfileEvents.emit(UserProfileEvents.ErrorWhileUpdating(uploadResult.message))
             }
         }

@@ -25,7 +25,8 @@ import java.io.IOException
 class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
 
     private val addProductViewModel: AddProductViewModel by viewModels()
-    private lateinit var selectedImageUri: Uri
+    private var selectedImageUri: Uri? = null
+    private var imageExtension: String = ""
     private lateinit var binding: FragmentAddProductBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,11 +37,24 @@ class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
             ivAddPhoto.setOnClickListener {
                 addProductViewModel.onAddPhotoClicked()
             }
+            btnSubmit.setOnClickListener {
+                addProductViewModel.onSubmitClicked(
+                    selectedImageUri,
+                    imageExtension,
+                    binding.etProductTitle.text.toString(),
+                    binding.etProductPrice.text.toString(),
+                    binding.etProductDescription.text.toString(),
+                    binding.etProductQuantity.text.toString()
+                )
+            }
         }
 
         lifecycleScope.launchWhenCreated {
             addProductViewModel.addProductUiEvents.collect { event ->
                 when (event) {
+                    is AddProductViewModel.AddProductUiEvent.ShowProgressBar -> {
+                        showProgressBar()
+                    }
                     is AddProductViewModel.AddProductUiEvent.PickPhoto -> {
                         when {
                             ContextCompat.checkSelfPermission(
@@ -61,6 +75,21 @@ class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
                                 )
                             }
                         }
+                    }
+                    is AddProductViewModel.AddProductUiEvent.ProvideImage -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_image), true)
+                    }
+                    is AddProductViewModel.AddProductUiEvent.ProvideTitle -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_title), true)
+                    }
+                    is AddProductViewModel.AddProductUiEvent.ProvideDescription -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_description), true)
+                    }
+                    is AddProductViewModel.AddProductUiEvent.ProvidePrice -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_price), true)
+                    }
+                    is AddProductViewModel.AddProductUiEvent.ProvideQuantity -> {
+                        showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_quantity), true)
                     }
                 }
             }
@@ -92,8 +121,8 @@ class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
                 try {
                     selectedImageUri = result.data!!.data!!
                     binding.ivAddPhoto.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_edit_24))
-                    val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(requireActivity().contentResolver.getType(selectedImageUri))
-                    GlideLoader(requireContext()).loadUserPicture(selectedImageUri, binding.ivProductImage)
+                    imageExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(requireActivity().contentResolver.getType(selectedImageUri!!))!!
+                    GlideLoader(requireContext()).loadUserPicture(selectedImageUri!!, binding.ivProductImage)
 //                    userProfileViewModel.onImagePicked(selectedImageUri, extension ?: "")
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -101,6 +130,14 @@ class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
                 }
             }
         }
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 
 }

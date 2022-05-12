@@ -14,7 +14,8 @@ class FirebaseStorageClass @Inject constructor() {
 
     suspend fun uploadProfileImage(
         selectedImageUri: Uri,
-        extensionType: String
+        extensionType: String,
+        imageType: String
     ): UploadProfileImage {
 
 
@@ -23,7 +24,7 @@ class FirebaseStorageClass @Inject constructor() {
         val profileImgReference: StorageReference = FirebaseStorage
             .getInstance()
             .reference
-            .child(Constants.USER_PROFILE_IMAGE + System.currentTimeMillis() + "." + extensionType)
+            .child(imageType + System.currentTimeMillis() + "." + extensionType)
 
         try {
 
