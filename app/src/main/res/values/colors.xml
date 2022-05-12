@@ -17,4 +17,6 @@
 
     <color name="colorLightGrey">#F2F1F1</color>
     <color name="colorSecondaryText">#989898</color>
+    
+    <color name="colorImageBackground">#E1E1E1</color>
 </resources>

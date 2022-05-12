@@ -31,6 +31,8 @@ class SignedInActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController)
 
+
+        // TODO: if profile not completed navigate to ProfileFragment
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
             user = intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
             if (user.profileCompleted == 0) {

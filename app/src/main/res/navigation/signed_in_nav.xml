@@ -69,6 +69,6 @@
     <fragment
         android:id="@+id/addProductFragment"
         android:name="com.example.eterra.ui.addproduct.AddProductFragment"
-        android:label="fragment_add_product"
+        android:label="Add Product"
         tools:layout="@layout/fragment_add_product" />
 </navigation>
