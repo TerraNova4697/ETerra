@@ -8,7 +8,11 @@
         android:id="@+id/item_products"
         android:name="com.example.eterra.ui.products.ProductsFragment"
         android:label="@string/products"
-        tools:layout="@layout/fragment_products"/>
+        tools:layout="@layout/fragment_products">
+        <action
+            android:id="@+id/action_item_products_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.eterra.ui.userprofile.UserProfileFragment"
@@ -59,4 +63,9 @@
             android:id="@+id/action_settingsFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.example.eterra.ui.addproduct.AddProductFragment"
+        android:label="fragment_add_product"
+        tools:layout="@layout/fragment_add_product" />
 </navigation>
