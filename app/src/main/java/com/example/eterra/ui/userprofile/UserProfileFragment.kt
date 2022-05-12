@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.collect
 import java.io.IOException
 
 @AndroidEntryPoint
-class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
+class UserProfileFragment : BaseFragment(R.layout.fragment_user_profile) {
 
     private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
@@ -40,13 +40,16 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentUserProfileBinding.bind(view)
-        navFrom = arguments?.getString("navFrom")?: Constants.SETTINGS_FRAGMENT
+        navFrom = arguments?.getString("navFrom") ?: Constants.SETTINGS_FRAGMENT
         Log.i(this.javaClass.simpleName, navFrom)
 
         (activity as AppCompatActivity).supportActionBar?.hide()
         (activity as SignedInActivity).bottomNavigationView.visibility = View.GONE
 
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            requireActivity(),
+            onBackPressedCallback
+        )
 
         binding.apply {
             etFirstName.isEnabled = false
@@ -59,7 +62,10 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
             etMobileNumber.setText(if (mobileNumber.length > 1) mobileNumber else "")
             rbFemale.isChecked = arguments?.getString("gender") == "female"
             if (arguments?.getString("image")!! != "") {
-                GlideLoader(requireContext()).loadUserPicture(Uri.parse(arguments?.getString("image")), binding.ivUserPhoto)
+                GlideLoader(requireContext()).loadUserPicture(
+                    Uri.parse(arguments?.getString("image")),
+                    binding.ivUserPhoto
+                )
             }
 
             btnSubmit.setOnClickListener {
@@ -80,7 +86,10 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
                         showProgressBar()
                     }
                     is UserProfileViewModel.UserProfileEvents.EnterMobileNumberError -> {
-                        showErrorSnackBar(resources.getString(R.string.err_msg_enter_mobile_number), true)
+                        showErrorSnackBar(
+                            resources.getString(R.string.err_msg_enter_mobile_number),
+                            true
+                        )
                     }
                     is UserProfileViewModel.UserProfileEvents.ProfileCompleted -> {
 
@@ -117,7 +126,10 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
                     }
                     is UserProfileViewModel.UserProfileEvents.PlaceImage -> {
 //                        selectedImageUri = event.imageUri
-                        GlideLoader(requireContext()).loadUserPicture(event.imageUri, binding.ivUserPhoto)
+                        GlideLoader(requireContext()).loadUserPicture(
+                            event.imageUri,
+                            binding.ivUserPhoto
+                        )
                     }
                     is UserProfileViewModel.UserProfileEvents.HideProgressDialog -> {
                         hideProgressBar()
@@ -138,23 +150,29 @@ class UserProfileFragment: BaseFragment(R.layout.fragment_user_profile) {
             }
         }
 
-    private val pickImageResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            if (result.data != null) {
-                try {
-                    selectedImageUri = result.data!!.data!!
-                    if (selectedImageUri != null) {
-                        val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(requireActivity().contentResolver.getType(selectedImageUri))
+    private val pickImageResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                if (result.data != null) {
+                    try {
+                        selectedImageUri = result.data!!.data!!
+                        if (selectedImageUri != null) {
+                            val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(
+                                requireActivity().contentResolver.getType(selectedImageUri)
+                            )
 //                        GlideLoader(requireContext()).loadUserPicture(selectedImageUri, binding.ivUserPhoto)
-                        userProfileViewModel.onImagePicked(selectedImageUri, extension ?: "")
+                            userProfileViewModel.onImagePicked(selectedImageUri, extension ?: "")
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        showErrorSnackBar(
+                            resources.getString(R.string.err_msg_image_selection_failed),
+                            true
+                        )
                     }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    showErrorSnackBar(resources.getString(R.string.err_msg_image_selection_failed), true)
                 }
             }
         }
-    }
 
     // TODO: Make it reusable
     private fun showImageChooser() {
