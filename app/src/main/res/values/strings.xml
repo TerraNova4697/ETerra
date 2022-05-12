@@ -46,5 +46,10 @@
     <string name="et_hint_product_price">Product Price ($)</string>
     <string name="et_hint_product_description">Product Description</string>
     <string name="et_hint_product_quantity">Product Quantity</string>
+    <string name="err_msg_provide_product_image">Please provide product image</string>
+    <string name="err_msg_provide_product_title">Please provide product title</string>
+    <string name="err_msg_provide_product_description">Please provide product description</string>
+    <string name="err_msg_provide_product_price">Please provide product price</string>
+    <string name="err_msg_provide_product_quantity">Please provide product quantity</string>
 
 </resources>
