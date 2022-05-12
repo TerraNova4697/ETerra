@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--TODO Step 2: Design the settings screen layout-->
-
-<!--START-->
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,9 +9,6 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     tools:context=".ui.settings.SettingsFragment">
-
-    <!--END-->
-
 
     <RelativeLayout
         android:layout_width="match_parent"
