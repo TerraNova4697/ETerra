@@ -2,6 +2,7 @@ package com.example.eterra.repository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.eterra.models.Product
 import com.example.eterra.models.User
 import com.example.eterra.ui.login.LoginViewModel
 import com.example.eterra.ui.register.RegisterViewModel
@@ -59,7 +60,7 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
-    private fun getCurrentUserId(): String {
+    fun getCurrentUserId(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser
         var currentUserId = ""
         if (currentUser != null) {
@@ -92,6 +93,34 @@ class FirestoreRepo @Inject constructor() {
         } catch (e: Exception) {
             return RegistrationResult.Failure(e.message ?: "Oops... something went wrong. Please try again.")
         }
+    }
+
+    suspend fun uploadProductDetails(productInfo: Product): UploadProduct {
+        try {
+            var isSuccessful = false
+            mFireStore
+                .collection(Constants.PRODUCTS)
+                .document()
+                .set(productInfo, SetOptions.merge())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        isSuccessful = true
+                    }
+                }
+                .await()
+            if (isSuccessful) {
+                return UploadProduct.Success
+            } else {
+                return UploadProduct.Failure("Oops... something went wrong. Please try again.")
+            }
+        } catch (e: Exception) {
+            return UploadProduct.Failure(e.message ?: "Oops... something went wrong. Please try again.")
+        }
+    }
+
+    sealed class UploadProduct {
+        object Success: UploadProduct()
+        data class Failure(val message: String): UploadProduct()
     }
 
     sealed class UpdateUserDetails {
