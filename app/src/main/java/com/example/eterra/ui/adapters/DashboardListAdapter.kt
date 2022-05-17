@@ -11,7 +11,7 @@ import com.example.eterra.databinding.ItemProductBinding
 import com.example.eterra.models.Product
 import java.io.IOException
 
-class DashboardListAdapter(): ListAdapter<Product, DashboardListAdapter.DashboardItemViewHolder>(DiffCallback()) {
+class DashboardListAdapter(private val listener: DashboardAdapterClickListener): ListAdapter<Product, DashboardListAdapter.DashboardItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DashboardItemViewHolder {
         val binding = ItemDashboardProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,8 +39,15 @@ class DashboardListAdapter(): ListAdapter<Product, DashboardListAdapter.Dashboar
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+            binding.root.setOnClickListener {
+                listener.onProductClicked(product.id)
+            }
         }
 
+    }
+
+    interface DashboardAdapterClickListener {
+        fun onProductClicked(productId: String)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<Product>() {

@@ -59,6 +59,9 @@
         <action
             android:id="@+id/action_item_dashboard_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_item_dashboard_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

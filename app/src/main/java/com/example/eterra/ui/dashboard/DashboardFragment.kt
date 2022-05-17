@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard) {
+class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard), DashboardListAdapter.DashboardAdapterClickListener {
 
     private val dashboardViewModel: DashboardViewModel by viewModels()
     private lateinit var binding: FragmentDashboardBinding
@@ -33,7 +33,7 @@ class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDashboardBinding.bind(view)
 
-        val dashboardListAdapter = DashboardListAdapter()
+        val dashboardListAdapter = DashboardListAdapter(this)
 
         binding.apply {
             rvDashboardItems.apply {
@@ -88,6 +88,11 @@ class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard) {
             } else -> return super.onOptionsItemSelected(item)
         }
 
+    }
+
+    override fun onProductClicked(productId: String) {
+        val action = DashboardFragmentDirections.actionItemDashboardToProductDetailsFragment(productId)
+        findNavController().navigate(action)
     }
 
 }
