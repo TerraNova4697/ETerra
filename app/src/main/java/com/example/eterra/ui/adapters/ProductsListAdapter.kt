@@ -10,7 +10,7 @@ import com.example.eterra.databinding.ItemProductBinding
 import com.example.eterra.models.Product
 import java.io.IOException
 
-class ProductsListAdapter() : ListAdapter<Product, ProductsListAdapter.ProductViewHolder>(DiffCallback()) {
+class ProductsListAdapter(private val listener: AdapterClickListener) : ListAdapter<Product, ProductsListAdapter.ProductViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,8 +38,15 @@ class ProductsListAdapter() : ListAdapter<Product, ProductsListAdapter.ProductVi
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+            binding.ibDelete.setOnClickListener {
+                listener.onProductDeleteClickListener(product.id)
+            }
         }
 
+    }
+
+    interface AdapterClickListener {
+        fun onProductDeleteClickListener(productId: String)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<Product>() {

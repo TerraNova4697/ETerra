@@ -31,6 +31,7 @@ class ProductsViewModel @Inject constructor(
         object ShowProgressBar: ProductsUiEvent()
         object HideProgressBar: ProductsUiEvent()
         data class ErrorFetchingProducts(val errorMessage: String): ProductsUiEvent()
+        object ErrorWhileDeleting: ProductsUiEvent()
     }
 
     fun collectProducts() {
@@ -48,6 +49,20 @@ class ProductsViewModel @Inject constructor(
                 }
             }
             _productsViewModelEvents.emit(ProductsUiEvent.HideProgressBar)
+        }
+    }
+
+    fun onProductDeleteClicked(productId: String) = viewModelScope.launch {
+        _productsViewModelEvents.emit(ProductsUiEvent.ShowProgressBar)
+        when (firestoreRepo.deleteProduct(productId)) {
+            is FirestoreRepo.DeleteResult.Failure -> {
+                _productsViewModelEvents.emit(ProductsUiEvent.ErrorWhileDeleting)
+                _productsViewModelEvents.emit(ProductsUiEvent.HideProgressBar)
+            }
+            is FirestoreRepo.DeleteResult.Success -> {
+                _productsViewModelEvents.emit(ProductsUiEvent.HideProgressBar)
+                collectProducts()
+            }
         }
     }
 

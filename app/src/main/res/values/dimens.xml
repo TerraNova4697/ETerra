@@ -57,5 +57,6 @@
     <dimen name="dashboard_item_padding_top_bottom">5dp</dimen>
     <dimen name="dashboard_item_text_size">12sp</dimen>
     <dimen name="dashboard_item_price_margin_top">2dp</dimen>
+    <dimen name="delete_icon_padding">5dp</dimen>
 
 </resources>

@@ -139,7 +139,6 @@ class FirestoreRepo @Inject constructor() {
     }
 
     suspend fun getProductsList(): LoadUsersProductsList {
-
         try {
             val snapshot = mFireStore
                 .collection(Constants.PRODUCTS)
@@ -156,6 +155,25 @@ class FirestoreRepo @Inject constructor() {
             Log.e(this@FirestoreRepo.javaClass.simpleName, e.message.toString())
             return LoadUsersProductsList.Failure("Oops, something went wrong")
         }
+    }
+
+    suspend fun deleteProduct(productId: String): DeleteResult {
+        return try {
+            mFireStore
+                .collection(Constants.PRODUCTS)
+                .document(productId)
+                .delete()
+                .await()
+            DeleteResult.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            DeleteResult.Failure
+        }
+    }
+
+    sealed class DeleteResult {
+        object Success: DeleteResult()
+        object Failure: DeleteResult()
     }
 
     sealed class LoadUsersProductsList {

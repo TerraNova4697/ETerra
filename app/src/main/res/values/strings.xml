@@ -55,4 +55,9 @@
     
     <string name="no_dashboard_items_found">No items found</string>
 
+    <string name="delete">Delete</string>
+    <string name="delete_dialog_message">Are you sure you want to delete the product?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>
