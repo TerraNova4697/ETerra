@@ -25,4 +25,16 @@ class GlideLoader (private val context: Context) {
         }
     }
 
+    fun loadProductPicture(imageUri: Uri, imageView: ImageView) {
+        try {
+            Glide
+                .with(context)
+                .load(imageUri)
+                .centerCrop()
+                .into(imageView)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 }
