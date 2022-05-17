@@ -7,10 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.eterra.models.Product
 import com.example.eterra.repository.FirestoreRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,13 +36,14 @@ class ProductsViewModel @Inject constructor(
     fun collectProducts() {
         viewModelScope.launch {
             _productsViewModelEvents.emit(ProductsUiEvent.ShowProgressBar)
-            val loadProductsResult = firestoreRepo.getProductsList()
+            val loadProductsResult = firestoreRepo.getUsersProductsList()
             when (loadProductsResult) {
                 is FirestoreRepo.LoadUsersProductsList.Success -> {
                     _products.value = loadProductsResult.products
                     Log.i(this@ProductsViewModel.javaClass.simpleName, loadProductsResult.products.toString())
                 }
                 is FirestoreRepo.LoadUsersProductsList.Failure -> {
+                    _productsViewModelEvents.emit(ProductsUiEvent.ErrorFetchingProducts(loadProductsResult.errorMessage))
                     Log.i(this@ProductsViewModel.javaClass.simpleName, loadProductsResult.errorMessage)
                 }
             }
