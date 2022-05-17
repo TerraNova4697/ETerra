@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentProductsBinding
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.adapters.ProductsListAdapter
 import com.example.eterra.ui.dashboard.DashboardFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -30,6 +32,31 @@ class ProductsFragment: BaseFragment(R.layout.fragment_products) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentProductsBinding.bind(view)
+
+        val productsListAdapter = ProductsListAdapter()
+
+        binding.apply {
+            rvProductsList.apply {
+                adapter = productsListAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+            }
+        }
+
+        productsViewModel.products.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                binding.apply {
+                    tvNoProductsYet.visibility = View.GONE
+                    rvProductsList.visibility = View.VISIBLE
+                }
+                productsListAdapter.submitList(it)
+            } else {
+                binding.apply {
+                    tvNoProductsYet.visibility = View.VISIBLE
+                    rvProductsList.visibility = View.GONE
+                }
+            }
+        }
 //        productsViewModel.collectProducts()
 //        lifecycleScope.launchWhenCreated {
 //            productsViewModel.productsViewModelEvents.collect { event ->
