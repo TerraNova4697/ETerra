@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_item_products_to_addProductFragment"
             app:destination="@id/addProductFragment" />
+        <action
+            android:id="@+id/action_item_products_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
@@ -71,4 +74,13 @@
         android:name="com.example.eterra.ui.addproduct.AddProductFragment"
         android:label="Add Product"
         tools:layout="@layout/fragment_add_product" />
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.eterra.ui.productdetails.ProductDetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_product_details">
+        <argument
+            android:name="extra_product_id"
+            app:argType="string" />
+    </fragment>
 </navigation>
