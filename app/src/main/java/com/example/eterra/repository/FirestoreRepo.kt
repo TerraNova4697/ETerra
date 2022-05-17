@@ -117,12 +117,32 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
-    suspend fun getProductsList(): LoadUsersProductsList {
+    suspend fun getUsersProductsList(): LoadUsersProductsList {
 
         try {
             val snapshot = mFireStore
                 .collection(Constants.PRODUCTS)
                 .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+            val listOfProducts: ArrayList<Product> = ArrayList()
+            for (i in snapshot.documents) {
+                val product = i.toObject(Product::class.java)
+                product!!.id = i.id
+                listOfProducts.add(product)
+            }
+            return LoadUsersProductsList.Success(listOfProducts)
+        } catch (e: Exception) {
+            Log.e(this@FirestoreRepo.javaClass.simpleName, e.message.toString())
+            return LoadUsersProductsList.Failure("Oops, something went wrong")
+        }
+    }
+
+    suspend fun getProductsList(): LoadUsersProductsList {
+
+        try {
+            val snapshot = mFireStore
+                .collection(Constants.PRODUCTS)
                 .get()
                 .await()
             val listOfProducts: ArrayList<Product> = ArrayList()

@@ -52,5 +52,7 @@
     <string name="err_msg_provide_product_price">Please provide product price</string>
     <string name="err_msg_provide_product_quantity">Please provide product quantity</string>
     <string name="no_products_yet">No products yet</string>
+    
+    <string name="no_dashboard_items_found">No items found</string>
 
 </resources>
