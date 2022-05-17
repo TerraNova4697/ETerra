@@ -1,5 +1,7 @@
 package com.example.eterra.ui
 
+import android.view.View
+import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +27,12 @@ open class BaseFragment(layout: Int): Fragment(layout) {
         snackbar.show()
     }
 
+    fun showProgressBar(progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
+    }
 
+    fun hideProgressBar(progressBar: ProgressBar) {
+        progressBar.visibility = View.GONE
+    }
 
 }

@@ -19,6 +19,8 @@ object Constants {
     const val USER_PROFILE_IMAGE = "User_Profile_Image"
     const val PRODUCT_IMAGE = "Product_Image"
 
+    const val USER_ID = "user_id"
+
     const val SETTINGS_FRAGMENT = "SettingsFragment"
     const val SIGNED_IN_ACTIVITY = "SignedInActivity"
 

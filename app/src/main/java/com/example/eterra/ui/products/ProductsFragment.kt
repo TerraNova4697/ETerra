@@ -10,13 +10,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
+import com.example.eterra.databinding.FragmentProductsBinding
+import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.dashboard.DashboardFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class ProductsFragment: Fragment(R.layout.fragment_products) {
+class ProductsFragment: BaseFragment(R.layout.fragment_products) {
 
     private val productsViewModel: ProductsViewModel by viewModels()
+    private lateinit var binding: FragmentProductsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +29,30 @@ class ProductsFragment: Fragment(R.layout.fragment_products) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentProductsBinding.bind(view)
+//        productsViewModel.collectProducts()
+//        lifecycleScope.launchWhenCreated {
+//            productsViewModel.productsViewModelEvents.collect { event ->
+//                when (event) {
+//                    is
+//                }
+//            }
+//        }
 
         lifecycleScope.launchWhenCreated {
-//            productsViewModel.productsViewModelEvents.collect { event ->
-////                when (event) {
-////                    is
-////                }
-//            }
+            productsViewModel.productsViewModelEvents.collect { event ->
+                when (event) {
+                    is ProductsViewModel.ProductsUiEvent.ErrorFetchingProducts -> {
+                        showErrorSnackBar(event.errorMessage, true)
+                    }
+                    is ProductsViewModel.ProductsUiEvent.ShowProgressBar -> {
+                        showProgressBar(binding.progressBar)
+                    }
+                    is ProductsViewModel.ProductsUiEvent.HideProgressBar -> {
+                        hideProgressBar(binding.progressBar)
+                    }
+                }
+            }
         }
     }
 

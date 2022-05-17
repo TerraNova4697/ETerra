@@ -35,21 +35,13 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_user_profile) {
     private val userProfileViewModel: UserProfileViewModel by viewModels()
     private lateinit var binding: FragmentUserProfileBinding
     private lateinit var selectedImageUri: Uri
-    private lateinit var navFrom: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentUserProfileBinding.bind(view)
-        navFrom = arguments?.getString("navFrom") ?: Constants.SETTINGS_FRAGMENT
-        Log.i(this.javaClass.simpleName, navFrom)
 
         (activity as AppCompatActivity).supportActionBar?.hide()
         (activity as SignedInActivity).bottomNavigationView.visibility = View.GONE
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity(),
-            onBackPressedCallback
-        )
 
         binding.apply {
             etFirstName.isEnabled = false
@@ -92,7 +84,6 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_user_profile) {
                         )
                     }
                     is UserProfileViewModel.UserProfileEvents.ProfileCompleted -> {
-
                         showErrorSnackBar("Profile completed", false)
                     }
                     is UserProfileViewModel.UserProfileEvents.PickImage -> {
@@ -189,19 +180,6 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_user_profile) {
 
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.GONE
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-    }
-
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (navFrom == Constants.SETTINGS_FRAGMENT) {
-                findNavController().navigateUp()
-            }
-        }
     }
 
 }
