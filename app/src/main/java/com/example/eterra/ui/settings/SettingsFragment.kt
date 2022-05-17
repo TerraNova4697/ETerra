@@ -88,10 +88,6 @@ class SettingsFragment(): BaseFragment(R.layout.fragment_settings) {
         getUserDetails()
     }
 
-    private fun navigateToProfileFragment() {
-
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 

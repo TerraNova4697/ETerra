@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentAddProductBinding
 import com.example.eterra.ui.BaseFragment
@@ -90,6 +91,14 @@ class AddProductFragment: BaseFragment(R.layout.fragment_add_product) {
                     }
                     is AddProductViewModel.AddProductUiEvent.ProvideQuantity -> {
                         showErrorSnackBar(resources.getString(R.string.err_msg_provide_product_quantity), true)
+                    }
+                    is AddProductViewModel.AddProductUiEvent.NavigateBack -> {
+                        hideProgressBar()
+                        findNavController().navigateUp()
+                    }
+                    is AddProductViewModel.AddProductUiEvent.NotifyUploadFailure -> {
+                        hideProgressBar()
+                        showErrorSnackBar(event.errorMessage, true)
                     }
                 }
             }

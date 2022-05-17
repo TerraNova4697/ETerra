@@ -2,6 +2,7 @@ package com.example.eterra.repository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.eterra.models.Product
 import com.example.eterra.models.User
 import com.example.eterra.ui.login.LoginViewModel
 import com.example.eterra.ui.register.RegisterViewModel
@@ -9,6 +10,7 @@ import com.example.eterra.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -59,7 +61,7 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
-    private fun getCurrentUserId(): String {
+    fun getCurrentUserId(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser
         var currentUserId = ""
         if (currentUser != null) {
@@ -68,8 +70,6 @@ class FirestoreRepo @Inject constructor() {
         return currentUserId
     }
 
-    //TODO: refactor Firebase classes to repository package and make them suspend
-    // Make use of this article:
     // https://medium.com/firebase-developers/android-mvvm-firestore-37c3a8d65404
     suspend fun registerUser(userInfo: User): RegistrationResult {
         try {
@@ -92,6 +92,60 @@ class FirestoreRepo @Inject constructor() {
         } catch (e: Exception) {
             return RegistrationResult.Failure(e.message ?: "Oops... something went wrong. Please try again.")
         }
+    }
+
+    suspend fun uploadProductDetails(productInfo: Product): UploadProduct {
+        try {
+            var isSuccessful = false
+            mFireStore
+                .collection(Constants.PRODUCTS)
+                .document()
+                .set(productInfo, SetOptions.merge())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        isSuccessful = true
+                    }
+                }
+                .await()
+            if (isSuccessful) {
+                return UploadProduct.Success
+            } else {
+                return UploadProduct.Failure("Oops... something went wrong. Please try again.")
+            }
+        } catch (e: Exception) {
+            return UploadProduct.Failure(e.message ?: "Oops... something went wrong. Please try again.")
+        }
+    }
+
+    suspend fun getProductsList(): LoadUsersProductsList {
+
+        try {
+            val snapshot = mFireStore
+                .collection(Constants.PRODUCTS)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+            val listOfProducts: ArrayList<Product> = ArrayList()
+            for (i in snapshot.documents) {
+                val product = i.toObject(Product::class.java)
+                product!!.id = i.id
+                listOfProducts.add(product)
+            }
+            return LoadUsersProductsList.Success(listOfProducts)
+        } catch (e: Exception) {
+            Log.e(this@FirestoreRepo.javaClass.simpleName, e.message.toString())
+            return LoadUsersProductsList.Failure("Oops, something went wrong")
+        }
+    }
+
+    sealed class LoadUsersProductsList {
+        data class Success(val products: ArrayList<Product>): LoadUsersProductsList()
+        data class Failure(val errorMessage: String): LoadUsersProductsList()
+    }
+
+    sealed class UploadProduct {
+        object Success: UploadProduct()
+        data class Failure(val message: String): UploadProduct()
     }
 
     sealed class UpdateUserDetails {

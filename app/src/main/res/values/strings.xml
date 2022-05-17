@@ -51,5 +51,6 @@
     <string name="err_msg_provide_product_description">Please provide product description</string>
     <string name="err_msg_provide_product_price">Please provide product price</string>
     <string name="err_msg_provide_product_quantity">Please provide product quantity</string>
+    <string name="no_products_yet">No products yet</string>
 
 </resources>
