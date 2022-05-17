@@ -24,4 +24,6 @@ object Constants {
     const val SETTINGS_FRAGMENT = "SettingsFragment"
     const val SIGNED_IN_ACTIVITY = "SignedInActivity"
 
+    const val EXTRA_PRODUCT_ID = "extra_product_id"
+
 }

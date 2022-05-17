@@ -171,6 +171,25 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun getProductDetails(productId: String): ProductDetails {
+        return try {
+            val document = mFireStore.collection(Constants.PRODUCTS)
+                .document(productId)
+                .get()
+                .await()
+            val product = document.toObject(Product::class.java)
+            ProductDetails.Success(product!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ProductDetails.Failure(e.message ?: "Something went wrong")
+        }
+    }
+
+    sealed class ProductDetails {
+        data class Success(val product: Product): ProductDetails()
+        data class Failure(val errorMessage: String): ProductDetails()
+    }
+
     sealed class DeleteResult {
         object Success: DeleteResult()
         object Failure: DeleteResult()
