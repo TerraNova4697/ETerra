@@ -75,5 +75,6 @@
     <string name="lbl_total_amount">Total Amount</string>
     <string name="btn_label_checkout">Checkout</string>
     <string name="action_cart">My Cart</string>
+    <string name="lbl_out_of_stock">out of stock</string>
 
 </resources>
