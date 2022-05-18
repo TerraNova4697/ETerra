@@ -2,6 +2,7 @@ package com.example.eterra.ui.productdetails
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -98,6 +99,12 @@ class ProductDetailsFragment: BaseFragment(R.layout.fragment_product_details) {
             tvProductDetailsPrice.text = product.price
             tvProductDetailsDescription.text = product.description
             tvProductDetailsAvailableQuantity.text = product.quantity
+            if (product.quantity == "0") {
+                btnAddToCard.isClickable = false
+                btnAddToCard.background = ResourcesCompat.getDrawable(resources, R.drawable.item_grey_background, null)
+                btnAddToCard.setTextColor(ResourcesCompat.getColor(resources, R.color.colorSecondaryText, null))
+                tvProductDetailsAvailableQuantity.text = resources.getString(R.string.lbl_out_of_stock)
+            }
         }
     }
 

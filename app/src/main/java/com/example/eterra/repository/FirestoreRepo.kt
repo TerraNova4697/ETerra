@@ -199,6 +199,25 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun getAllProductsList(): GetAllProductsResult {
+        return try {
+            val document = mFireStore.collection(Constants.PRODUCTS)
+                .get()
+                .await()
+            val productList: ArrayList<Product> = ArrayList()
+            for (i in document) {
+                val product = i.toObject(Product::class.java)
+                product.id = i.id
+                productList.add(product)
+            }
+            GetAllProductsResult.Success(productList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetAllProductsResult.Failure(e.message.toString())
+        }
+
+    }
+
     suspend fun getCartList(): GetCartList {
         return try {
             val document = mFireStore.collection(Constants.CART_ITEMS)
@@ -218,6 +237,29 @@ class FirestoreRepo @Inject constructor() {
             e.printStackTrace()
             GetCartList.Failure(e.message.toString())
         }
+    }
+
+    suspend fun removeItemFromCart(cartId: String):RemoveCartResult {
+        return try {
+            mFireStore.collection(Constants.CART_ITEMS)
+                .document(cartId)
+                .delete()
+                .await()
+            RemoveCartResult.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            RemoveCartResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class RemoveCartResult {
+        object Success: RemoveCartResult()
+        data class Failure(val errorMessage: String): RemoveCartResult()
+    }
+
+    sealed class GetAllProductsResult {
+        data class Success(val list: ArrayList<Product>): GetAllProductsResult()
+        data class Failure(val errorMessage: String): GetAllProductsResult()
     }
 
     sealed class GetCartList {

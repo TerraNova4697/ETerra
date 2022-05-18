@@ -3,25 +3,33 @@ package com.example.eterra.ui.cartlist
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentCartListBinding
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.CartItemsListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlin.math.roundToLong
 
 @AndroidEntryPoint
-class CartListFragment: BaseFragment(R.layout.fragment_cart_list) {
+class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
+    CartItemsListAdapter.CartItemsClickListeners {
 
     private lateinit var binding: FragmentCartListBinding
     private val cartListViewModel: CartListViewModel by viewModels()
 
     override fun onResume() {
         super.onResume()
-        cartListViewModel.collectCartItems()
+        cartListViewModel.collectProductItems()
 
-        val cartItemsListAdapter = CartItemsListAdapter()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentCartListBinding.bind(view)
+        val cartItemsListAdapter = CartItemsListAdapter(this)
 
         binding.apply {
             tvShippingCharge.text = "$10.00"
@@ -53,11 +61,30 @@ class CartListFragment: BaseFragment(R.layout.fragment_cart_list) {
             val shipping = binding.tvShippingCharge.text.toString()
             binding.tvTotalAmount.text = "$${10.00 + it}"
         }
+
+        lifecycleScope.launchWhenCreated {
+            cartListViewModel.cartListUiEvents.collect { event ->
+                when (event) {
+
+                    is CartListViewModel.CartListUiEvent.ShowProgressBar -> {
+                        showProgressBar(binding.progressBar)
+                    }
+                    is CartListViewModel.CartListUiEvent.HideProgressBar -> {
+                        hideProgressBar(binding.progressBar)
+                    }
+                    is CartListViewModel.CartListUiEvent.ErrorFetchingProducts -> {
+                        showErrorSnackBar(event.errorMessage, true)
+                    }
+                    is CartListViewModel.CartListUiEvent.ErrorRemovingCartItem -> {
+                        showErrorSnackBar(event.errorMessage, true)
+                    }
+                }
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCartListBinding.bind(view)
+    override fun onDeleteClicked(cartId: String) {
+        cartListViewModel.onCartItemDeleteClicked(cartId)
     }
 
 }
