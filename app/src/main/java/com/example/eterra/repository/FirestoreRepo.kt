@@ -199,6 +199,32 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun getCartList(): GetCartList {
+        return try {
+            val document = mFireStore.collection(Constants.CART_ITEMS)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+            val list: ArrayList<CartItem> = ArrayList()
+
+            for (i in document) {
+                val cartItem = i.toObject(CartItem::class.java)
+                cartItem.id = i.id
+
+                list.add(cartItem)
+            }
+            GetCartList.Success(list)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetCartList.Failure(e.message.toString())
+        }
+    }
+
+    sealed class GetCartList {
+        data class Success(val cartList: ArrayList<CartItem>): GetCartList()
+        data class Failure(val errorMessage: String): GetCartList()
+    }
+
     sealed class AddToCart {
         object Success: AddToCart()
         data class Failure(val errorMessage: String): AddToCart()
