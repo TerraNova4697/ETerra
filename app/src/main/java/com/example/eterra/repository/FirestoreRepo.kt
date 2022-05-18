@@ -252,6 +252,24 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun updateCartItem(cartId: String, itemHashMap: HashMap<String, Any>): UpdateCartItemResult {
+        return try {
+            mFireStore.collection(Constants.CART_ITEMS)
+                .document(cartId)
+                .update(itemHashMap)
+                .await()
+            UpdateCartItemResult.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            UpdateCartItemResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class UpdateCartItemResult {
+        object Success: UpdateCartItemResult()
+        data class Failure(val errorMessage: String): UpdateCartItemResult()
+    }
+
     sealed class RemoveCartResult {
         object Success: RemoveCartResult()
         data class Failure(val errorMessage: String): RemoveCartResult()

@@ -1,11 +1,13 @@
 package com.example.eterra.ui.cartlist
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eterra.models.CartItem
 import com.example.eterra.models.Product
 import com.example.eterra.repository.FirestoreRepo
+import com.example.eterra.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,7 +36,7 @@ class CartListViewModel @Inject constructor(
         collectCartItems()
     }
 
-    fun collectCartItems() {
+    private fun collectCartItems() {
         viewModelScope.launch {
             _cartListUiEvents.emit(CartListUiEvent.ShowProgressBar)
             val loadCartItemsResult = firestoreRepo.getCartList()
@@ -47,7 +49,7 @@ class CartListViewModel @Inject constructor(
 
                         for (product in _products.value!!) {
                             for (cartItem in _cartItems.value!!) {
-                                if (product.id == cartItem.id) {
+                                if (product.id == cartItem.product_id) {
                                     cartItem.stock_quantity = product.quantity
 
                                     if (product.quantity.toInt() == 0) {
@@ -59,7 +61,7 @@ class CartListViewModel @Inject constructor(
                     }
                 }
                 is FirestoreRepo.GetCartList.Failure -> {
-                    _cartListUiEvents.emit(CartListUiEvent.ErrorFetchingProducts(loadCartItemsResult.errorMessage))
+                    _cartListUiEvents.emit(CartListUiEvent.ShowError(loadCartItemsResult.errorMessage))
                 }
             }
             _cartListUiEvents.emit(CartListUiEvent.HideProgressBar)
@@ -76,7 +78,7 @@ class CartListViewModel @Inject constructor(
                     collectCartItems()
                 }
                 is FirestoreRepo.GetAllProductsResult.Failure -> {
-                    _cartListUiEvents.emit(CartListUiEvent.ErrorFetchingProducts(loadProductsResult.errorMessage))
+                    _cartListUiEvents.emit(CartListUiEvent.ShowError(loadProductsResult.errorMessage))
                 }
             }
 //            _cartListUiEvents.emit(CartListUiEvent.HideProgressBar)
@@ -101,7 +103,46 @@ class CartListViewModel @Inject constructor(
             }
             is FirestoreRepo.RemoveCartResult.Failure -> {
                 collectProductItems()
-                _cartListUiEvents.emit(CartListUiEvent.ErrorRemovingCartItem(removeItemResult.errorMessage))
+                _cartListUiEvents.emit(CartListUiEvent.ShowError(removeItemResult.errorMessage))
+            }
+        }
+    }
+
+    fun onRemoveOneItemClicked(cartId: String, currentCartQuantity: String) = viewModelScope.launch {
+        _cartListUiEvents.emit(CartListUiEvent.ShowProgressBar)
+        if (currentCartQuantity == "0") {
+            onCartItemDeleteClicked(cartId)
+        } else {
+            val cartQuantity = currentCartQuantity.toInt()
+            val itemHashMap = HashMap<String, Any>()
+            itemHashMap[Constants.CART_QUANTITY] = (cartQuantity - 1).toString()
+            val cartUpdateResult = firestoreRepo.updateCartItem(cartId, itemHashMap)
+            when (cartUpdateResult) {
+                is FirestoreRepo.UpdateCartItemResult.Success -> {
+                    collectProductItems()
+                }
+                is FirestoreRepo.UpdateCartItemResult.Failure -> {
+                    _cartListUiEvents.emit(CartListUiEvent.HideProgressBar)
+                    _cartListUiEvents.emit(CartListUiEvent.ShowError(cartUpdateResult.errorMessage))
+                }
+            }
+        }
+    }
+
+    fun onAddOneItemClicked(cartId: String, currentCartQuantity: String, stockQuantity: String) = viewModelScope.launch {
+        val cartQuantity = currentCartQuantity.toInt()
+        if (cartQuantity < stockQuantity.toInt()) {
+            val itemHashMap = HashMap<String, Any>()
+            itemHashMap[Constants.CART_QUANTITY] = (cartQuantity + 1).toString()
+            val cartUpdateResult = firestoreRepo.updateCartItem(cartId, itemHashMap)
+            when (cartUpdateResult) {
+                is FirestoreRepo.UpdateCartItemResult.Success -> {
+                    collectProductItems()
+                }
+                is FirestoreRepo.UpdateCartItemResult.Failure -> {
+                    _cartListUiEvents.emit(CartListUiEvent.HideProgressBar)
+                    _cartListUiEvents.emit(CartListUiEvent.ShowError(cartUpdateResult.errorMessage))
+                }
             }
         }
     }
@@ -109,8 +150,7 @@ class CartListViewModel @Inject constructor(
     sealed class CartListUiEvent{
         object ShowProgressBar: CartListUiEvent()
         object HideProgressBar: CartListUiEvent()
-        data class ErrorFetchingProducts(val errorMessage: String): CartListUiEvent()
-        data class ErrorRemovingCartItem(val errorMessage: String): CartListUiEvent()
+        data class ShowError(val errorMessage: String): CartListUiEvent()
     }
 
 }

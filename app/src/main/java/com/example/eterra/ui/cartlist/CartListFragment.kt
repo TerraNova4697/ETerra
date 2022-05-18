@@ -11,7 +11,6 @@ import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.CartItemsListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlin.math.roundToLong
 
 @AndroidEntryPoint
 class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
@@ -72,10 +71,7 @@ class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
                     is CartListViewModel.CartListUiEvent.HideProgressBar -> {
                         hideProgressBar(binding.progressBar)
                     }
-                    is CartListViewModel.CartListUiEvent.ErrorFetchingProducts -> {
-                        showErrorSnackBar(event.errorMessage, true)
-                    }
-                    is CartListViewModel.CartListUiEvent.ErrorRemovingCartItem -> {
+                    is CartListViewModel.CartListUiEvent.ShowError -> {
                         showErrorSnackBar(event.errorMessage, true)
                     }
                 }
@@ -85,6 +81,14 @@ class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
 
     override fun onDeleteClicked(cartId: String) {
         cartListViewModel.onCartItemDeleteClicked(cartId)
+    }
+
+    override fun addOneItem(cartId: String, currentCartQuantity: String, stockQuantity: String) {
+        cartListViewModel.onAddOneItemClicked(cartId, currentCartQuantity, stockQuantity)
+    }
+
+    override fun removeOneItem(cartId: String, currentCartQuantity: String) {
+        cartListViewModel.onRemoveOneItemClicked(cartId, currentCartQuantity)
     }
 
 }
