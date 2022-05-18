@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,9 @@ class CartListViewModel @Inject constructor(
 
     private val _cartListUiEvents = MutableSharedFlow<CartListUiEvent>()
     val cartListUiEvents = _cartListUiEvents.asSharedFlow()
+
+    private val _subtotal = MutableLiveData<Double>(0.0)
+    val subtotal = _subtotal
 
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems = _cartItems
@@ -36,6 +40,7 @@ class CartListViewModel @Inject constructor(
             when (loadProductsResult) {
                 is FirestoreRepo.GetCartList.Success -> {
                     _cartItems.value = loadProductsResult.cartList
+                    calculateSubtotal(loadProductsResult.cartList)
                 }
                 is FirestoreRepo.GetCartList.Failure -> {
                     _cartListUiEvents.emit(CartListUiEvent.ErrorFetchingProducts(loadProductsResult.errorMessage))
@@ -43,6 +48,16 @@ class CartListViewModel @Inject constructor(
             }
             _cartListUiEvents.emit(CartListUiEvent.HideProgressBar)
         }
+    }
+
+    private fun calculateSubtotal(cartList: ArrayList<CartItem>) {
+        var subtotal = 0.0
+        for (item in cartList) {
+            val price: Double = item.price.toDouble()
+            val quantity = item.cart_quantity.toInt()
+            subtotal += (price * quantity)
+        }
+        _subtotal.value = subtotal
     }
 
     sealed class CartListUiEvent{
