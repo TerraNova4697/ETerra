@@ -25,5 +25,6 @@ object Constants {
     const val SIGNED_IN_ACTIVITY = "SignedInActivity"
 
     const val EXTRA_PRODUCT_ID = "extra_product_id"
+    const val EXTRA_PRODUCT_OWNER_ID = "extra_product_owner_id"
 
 }

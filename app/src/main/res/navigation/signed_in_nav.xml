@@ -85,5 +85,8 @@
         <argument
             android:name="extra_product_id"
             app:argType="string" />
+        <argument
+            android:name="extra_product_owner_id"
+            app:argType="string" />
     </fragment>
 </navigation>

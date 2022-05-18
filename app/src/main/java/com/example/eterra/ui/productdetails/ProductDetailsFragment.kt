@@ -10,14 +10,16 @@ import com.example.eterra.databinding.FragmentProductDetailsBinding
 import com.example.eterra.models.Product
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.utils.Constants
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.io.IOException
 
 @AndroidEntryPoint
-class ProductDetailsFragment(): BaseFragment(R.layout.fragment_product_details) {
+class ProductDetailsFragment: BaseFragment(R.layout.fragment_product_details) {
 
     private lateinit var productId: String
+    private lateinit var ownerId: String
     private lateinit var binding: FragmentProductDetailsBinding
     private val productDetailsViewModel: ProductDetailsViewModel by viewModels()
 
@@ -26,7 +28,14 @@ class ProductDetailsFragment(): BaseFragment(R.layout.fragment_product_details) 
         binding = FragmentProductDetailsBinding.bind(view)
 
         productId = arguments?.getString(Constants.EXTRA_PRODUCT_ID) ?: ""
+        ownerId = arguments?.getString(Constants.EXTRA_PRODUCT_OWNER_ID) ?: ""
         productDetailsViewModel.fetchProductDetails(productId)
+
+        if (ownerId == FirebaseAuth.getInstance().currentUser!!.uid) {
+            hideAddToCartBtn()
+        } else {
+            showAddToCartBtn()
+        }
 
         lifecycleScope.launchWhenCreated {
             productDetailsViewModel.productDetailsUiEvents.collect { event ->
@@ -43,6 +52,14 @@ class ProductDetailsFragment(): BaseFragment(R.layout.fragment_product_details) 
                 }
             }
         }
+    }
+
+    private fun showAddToCartBtn() {
+        binding.btnAddToCard.visibility = View.VISIBLE
+    }
+
+    private fun hideAddToCartBtn() {
+        binding.btnAddToCard.visibility = View.GONE
     }
 
     private fun displayDetails(product: Product) {

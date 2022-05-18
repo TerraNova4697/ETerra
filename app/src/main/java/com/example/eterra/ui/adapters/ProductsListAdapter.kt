@@ -42,7 +42,7 @@ class ProductsListAdapter(private val listener: AdapterClickListener) : ListAdap
                 listener.onProductDeleteClickListener(product.id)
             }
             binding.root.setOnClickListener {
-                listener.onProductClicked(product.id)
+                listener.onProductClicked(product.id, product.user_id)
             }
         }
 
@@ -50,7 +50,7 @@ class ProductsListAdapter(private val listener: AdapterClickListener) : ListAdap
 
     interface AdapterClickListener {
         fun onProductDeleteClickListener(productId: String)
-        fun onProductClicked(productId: String)
+        fun onProductClicked(productId: String, ownerId: String)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<Product>() {

@@ -90,8 +90,8 @@ class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard), DashboardL
 
     }
 
-    override fun onProductClicked(productId: String) {
-        val action = DashboardFragmentDirections.actionItemDashboardToProductDetailsFragment(productId)
+    override fun onProductClicked(productId: String, ownerId: String) {
+        val action = DashboardFragmentDirections.actionItemDashboardToProductDetailsFragment(productId, ownerId)
         findNavController().navigate(action)
     }
 

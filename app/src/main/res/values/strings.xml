@@ -64,4 +64,6 @@
     <string name="lbl_product_description">Product Description</string>
     <string name="lbl_product_details_stock_quantity">Stock Quantity</string>
 
+    <string name="btn_lbl_add_to_card">ADD TO CART</string>
+
 </resources>
