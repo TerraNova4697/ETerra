@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorOffWhite"
+    tools:context=".ui.cartlist.CartListFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_cart_items_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/rv_cart_items_marginTop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/ll_checkout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.eterra.utils.customviews.ETBoldTextView
+        android:id="@+id/tv_no_products_yet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/no_item_found_in_cart"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_checkout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/ll_checkout_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.example.eterra.utils.customviews.ETTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/lbl_subtotal"
+                android:textColor="@color/item_name_text_color"
+                android:textSize="@dimen/checkout_label_value_textSize" />
+
+            <com.example.eterra.utils.customviews.ETTextView
+                android:id="@+id/tv_sub_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/checkout_label_value_textSize"
+                tools:text="$100" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.example.eterra.utils.customviews.ETTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/lbl_shipping_charge"
+                android:textColor="@color/item_name_text_color"
+                android:textSize="@dimen/checkout_label_value_textSize" />
+
+            <com.example.eterra.utils.customviews.ETTextView
+                android:id="@+id/tv_shipping_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/checkout_label_value_textSize"
+                tools:text="$10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.example.eterra.utils.customviews.ETBoldTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/lbl_total_amount"
+                android:textColor="@color/item_name_text_color"
+                android:textSize="@dimen/checkout_label_value_textSize" />
+
+            <com.example.eterra.utils.customviews.ETBoldTextView
+                android:id="@+id/tv_total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/item_name_text_color"
+                android:textSize="@dimen/checkout_label_value_textSize"
+                tools:text="$110" />
+        </LinearLayout>
+
+        <com.example.eterra.utils.customviews.ETButton
+            android:id="@+id/btn_checkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/btn_label_checkout"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_product_details_quantity" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

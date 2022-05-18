@@ -65,5 +65,15 @@
     <string name="lbl_product_details_stock_quantity">Stock Quantity</string>
 
     <string name="btn_lbl_add_to_card">ADD TO CART</string>
+    <string name="btn_lbl_go_to_cart">GO TO CART</string>
+    <string name="product_added_to_cart">Product was added to your cart.</string>
+    
+    <string name="title_my_cart">MY CART</string>
+    <string name="no_item_found_in_cart">No item found in Cart</string>
+    <string name="lbl_subtotal">Subtotal</string>
+    <string name="lbl_shipping_charge">Shipping Charge</string>
+    <string name="lbl_total_amount">Total Amount</string>
+    <string name="btn_label_checkout">Checkout</string>
+    <string name="action_cart">My Cart</string>
 
 </resources>

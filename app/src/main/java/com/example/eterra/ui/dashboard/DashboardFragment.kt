@@ -5,12 +5,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentDashboardBinding
 import com.example.eterra.ui.BaseFragment
@@ -19,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard), DashboardListAdapter.DashboardAdapterClickListener {
+class DashboardFragment: BaseFragment(R.layout.fragment_dashboard), DashboardListAdapter.DashboardAdapterClickListener {
 
     private val dashboardViewModel: DashboardViewModel by viewModels()
     private lateinit var binding: FragmentDashboardBinding
@@ -85,7 +83,13 @@ class DashboardFragment(): BaseFragment(R.layout.fragment_dashboard), DashboardL
                 val action = DashboardFragmentDirections.actionItemDashboardToSettingsFragment()
                 findNavController().navigate(action)
                 true
-            } else -> return super.onOptionsItemSelected(item)
+            }
+            R.id.action_cart -> {
+                val action = DashboardFragmentDirections.actionItemDashboardToCartListFragment()
+                findNavController().navigate(action)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
 
     }
