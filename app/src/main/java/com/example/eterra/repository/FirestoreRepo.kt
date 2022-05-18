@@ -2,6 +2,7 @@ package com.example.eterra.repository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.eterra.models.CartItem
 import com.example.eterra.models.Product
 import com.example.eterra.models.User
 import com.example.eterra.ui.login.LoginViewModel
@@ -183,6 +184,24 @@ class FirestoreRepo @Inject constructor() {
             e.printStackTrace()
             ProductDetails.Failure(e.message ?: "Something went wrong")
         }
+    }
+
+    suspend fun addCartItems(addToCart: CartItem): AddToCart {
+        return try {
+            mFireStore.collection(Constants.CART_ITEMS)
+                .document()
+                .set(addToCart, SetOptions.merge())
+                .await()
+            AddToCart.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            AddToCart.Failure(e.message ?: "Something went wrong")
+        }
+    }
+
+    sealed class AddToCart {
+        object Success: AddToCart()
+        data class Failure(val errorMessage: String): AddToCart()
     }
 
     sealed class ProductDetails {

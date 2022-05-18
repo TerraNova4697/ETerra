@@ -103,8 +103,8 @@ class ProductsFragment: BaseFragment(R.layout.fragment_products), ProductsListAd
         showAlertDialog(productId)
     }
 
-    override fun onProductClicked(productId: String) {
-        val action = ProductsFragmentDirections.actionItemProductsToProductDetailsFragment(productId)
+    override fun onProductClicked(productId: String, ownerId: String) {
+        val action = ProductsFragmentDirections.actionItemProductsToProductDetailsFragment(productId, ownerId)
         findNavController().navigate(action)
     }
 

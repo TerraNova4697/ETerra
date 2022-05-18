@@ -129,6 +129,37 @@
                     android:textStyle="bold"
                     tools:text="5" />
             </LinearLayout>
+
+            <com.example.eterra.utils.customviews.ETButton
+                android:id="@+id/btn_add_to_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="15dp"
+                android:text="@string/btn_lbl_add_to_card"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_product_details_quantity" />
+
+            <com.example.eterra.utils.customviews.ETButton
+                android:id="@+id/btn_go_to_cart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="15dp"
+                android:text="@string/btn_lbl_go_to_cart"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_add_to_card" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

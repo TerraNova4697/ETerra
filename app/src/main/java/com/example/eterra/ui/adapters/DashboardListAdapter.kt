@@ -40,14 +40,14 @@ class DashboardListAdapter(private val listener: DashboardAdapterClickListener):
                 e.printStackTrace()
             }
             binding.root.setOnClickListener {
-                listener.onProductClicked(product.id)
+                listener.onProductClicked(product.id, product.user_id)
             }
         }
 
     }
 
     interface DashboardAdapterClickListener {
-        fun onProductClicked(productId: String)
+        fun onProductClicked(productId: String, ownerId: String)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<Product>() {

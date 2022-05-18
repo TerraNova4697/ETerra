@@ -21,9 +21,11 @@ object Constants {
 
     const val USER_ID = "user_id"
 
-    const val SETTINGS_FRAGMENT = "SettingsFragment"
-    const val SIGNED_IN_ACTIVITY = "SignedInActivity"
-
     const val EXTRA_PRODUCT_ID = "extra_product_id"
+    const val EXTRA_PRODUCT_OWNER_ID = "extra_product_owner_id"
+
+    const val DEFAULT_CART_QUANTITY = "1"
+    const val CART_ITEMS = "cart_items"
+    const val PRODUCT_ID = "product_id"
 
 }

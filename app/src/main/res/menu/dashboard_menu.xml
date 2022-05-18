@@ -5,4 +5,9 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         app:showAsAction="always"/>
+
+    <item android:id="@+id/action_cart"
+        android:icon="@drawable/ic_shopping_cart"
+        android:title="@string/action_cart"
+        app:showAsAction="always"/>
 </menu>
