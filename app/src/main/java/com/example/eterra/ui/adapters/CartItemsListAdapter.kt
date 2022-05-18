@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.eterra.R
 import com.example.eterra.databinding.ItemCartLayoutBinding
 import com.example.eterra.models.CartItem
 import java.io.IOException
@@ -57,6 +56,12 @@ class CartItemsListAdapter(
                 ibDeleteCartItem.setOnClickListener {
                     listener.onDeleteClicked(cartItem.id)
                 }
+                ibAddCartItem.setOnClickListener {
+                    listener.addOneItem(cartItem.id, cartItem.cart_quantity, cartItem.stock_quantity)
+                }
+                ibRemoveCartItem.setOnClickListener {
+                    listener.removeOneItem(cartItem.id, cartItem.cart_quantity)
+                }
             }
         }
 
@@ -64,6 +69,8 @@ class CartItemsListAdapter(
 
     interface CartItemsClickListeners {
         fun onDeleteClicked(cartId: String)
+        fun addOneItem(cartId: String, currentCartQuantity: String, stockQuantity: String)
+        fun removeOneItem(cartId: String, currentCartQuantity: String)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<CartItem>() {
