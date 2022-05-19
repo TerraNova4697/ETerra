@@ -49,6 +49,10 @@ class SettingsFragment(): BaseFragment(R.layout.fragment_settings) {
                 findNavController().navigate(action)
 //                settingsViewModel.onEditClicked()
             }
+            llAddress.setOnClickListener {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToAddressListFragment()
+                findNavController().navigate(action)
+            }
         }
 
         lifecycleScope.launchWhenCreated {
