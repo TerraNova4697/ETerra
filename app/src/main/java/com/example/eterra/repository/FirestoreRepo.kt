@@ -279,6 +279,32 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun getAddressesList(): GetAddressesListResult {
+        return try {
+            val document = mFireStore.collection(Constants.ADDRESSES)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+            val list: ArrayList<Address> = ArrayList()
+
+            for (i in document) {
+                val addressItem = i.toObject(Address::class.java)
+                addressItem.id = i.id
+
+                list.add(addressItem)
+            }
+            GetAddressesListResult.Success(list)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetAddressesListResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class GetAddressesListResult {
+        data class Success(val cartList: ArrayList<Address>): GetAddressesListResult()
+        data class Failure(val errorMessage: String): GetAddressesListResult()
+    }
+
     sealed class AddToAddresses {
         object Success: AddToAddresses()
         data class Failure(val errorMessage: String): AddToAddresses()
