@@ -102,7 +102,11 @@
         android:id="@+id/cartListFragment"
         android:name="com.example.eterra.ui.cartlist.CartListFragment"
         android:label="@string/action_cart"
-        tools:layout="@layout/fragment_cart_list" />
+        tools:layout="@layout/fragment_cart_list" >
+        <action
+            android:id="@+id/action_cartListFragment_to_addressListFragment"
+            app:destination="@id/addressListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addressListFragment"
         android:name="com.example.eterra.ui.addresslist.AddressListFragment"
@@ -111,6 +115,9 @@
         <action
             android:id="@+id/action_addressListFragment_to_addEditAddressFragment"
             app:destination="@id/addEditAddressFragment" />
+        <argument
+            android:name="address_list_purpose"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addEditAddressFragment"

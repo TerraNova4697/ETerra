@@ -9,8 +9,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentAddressListBinding
+import com.example.eterra.models.Address
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.AddressListAdapter
+import com.example.eterra.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -19,6 +21,7 @@ class AddressListFragment: BaseFragment(R.layout.fragment_address_list), Address
 
     private lateinit var binding: FragmentAddressListBinding
     private val addressListViewModel: AddressListViewModel by viewModels()
+    private lateinit var addressListPurpose: String
 
     override fun onResume() {
         super.onResume()
@@ -29,12 +32,17 @@ class AddressListFragment: BaseFragment(R.layout.fragment_address_list), Address
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddressListBinding.bind(view)
 
+        addressListPurpose = arguments?.getString(Constants.ADDRESS_LIST_PURPOSE) ?: Constants.CHOOSE_ADDRESS
+
         val addressListAdapter = AddressListAdapter(this)
 
         binding.apply {
             tvAddAddress.setOnClickListener {
                 val action = AddressListFragmentDirections.actionAddressListFragmentToAddEditAddressFragment()
                 findNavController().navigate(action)
+            }
+            if (addressListPurpose == Constants.CHOOSE_ADDRESS) {
+                tvTitle.text = resources.getString(R.string.title_select_address)
             }
             rvAddressList.apply {
                 adapter = addressListAdapter
@@ -68,6 +76,12 @@ class AddressListFragment: BaseFragment(R.layout.fragment_address_list), Address
                     }
                 }
             }
+        }
+    }
+
+    override fun onAddressSelected(address: Address) {
+        if (addressListPurpose == Constants.CHOOSE_ADDRESS) {
+            showErrorSnackBar("Selected address: $address", false)
         }
     }
 
