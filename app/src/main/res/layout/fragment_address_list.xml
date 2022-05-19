@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.addresslist.AddressListFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_address_list"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/img_splash_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingEnd="0dp"
+            android:text="@string/title_address_list"
+            android:textColor="@color/white"
+            android:textSize="@dimen/toolbar_title_text_size"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
     <com.example.eterra.utils.customviews.ETTextView
         android:id="@+id/tv_add_address"
         android:layout_width="match_parent"
@@ -20,7 +41,7 @@
         android:textSize="@dimen/add_address_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_address_list" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_address_list"
