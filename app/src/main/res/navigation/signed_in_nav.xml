@@ -118,10 +118,18 @@
         <argument
             android:name="address_list_purpose"
             app:argType="string" />
+        <action
+            android:id="@+id/action_addressListFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditAddressFragment"
         android:name="com.example.eterra.ui.addeditaddress.AddEditAddressFragment"
         android:label="@string/lbl_add_address"
         tools:layout="@layout/fragment_add_edit_fragment" />
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.example.eterra.ui.checkout.CheckoutFragment"
+        android:label="fragment_checkout"
+        tools:layout="@layout/fragment_checkout" />
 </navigation>
