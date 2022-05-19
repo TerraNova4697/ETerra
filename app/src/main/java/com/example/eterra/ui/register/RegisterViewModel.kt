@@ -18,7 +18,7 @@ class RegisterViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuthClass,
     private val savedStateHandle: SavedStateHandle,
     private val firestoreRepo: FirestoreRepo
-): ViewModel() {
+) : ViewModel() {
 
     // TODO: Rename variables more comprehensive
 
@@ -27,36 +27,42 @@ class RegisterViewModel @Inject constructor(
 
     sealed class RegisterUiEvent() {
         // Registration events
-        object EnterFirstNameError: RegisterUiEvent()
-        object EnterLastNameError: RegisterUiEvent()
-        object EnterEmailError: RegisterUiEvent()
-        object EnterPassword: RegisterUiEvent()
-        object PasswordNotMatch: RegisterUiEvent()
-        object ValidData: RegisterUiEvent()
-        object SignInUser: RegisterUiEvent()
-        data class ErrorWhileRegistering(val message: String): RegisterUiEvent()
-        object RegisteringInProgress: RegisterUiEvent()
+        object EnterFirstNameError : RegisterUiEvent()
+        object EnterLastNameError : RegisterUiEvent()
+        object EnterEmailError : RegisterUiEvent()
+        object EnterPassword : RegisterUiEvent()
+        object PasswordNotMatch : RegisterUiEvent()
+        object ValidData : RegisterUiEvent()
+        object SignInUser : RegisterUiEvent()
+        data class ErrorWhileRegistering(val message: String) : RegisterUiEvent()
+        object RegisteringInProgress : RegisterUiEvent()
     }
 
-    fun onBtnRegisterClicked(firstName: String, lastName: String, email: String, password: String, passwordConfirm: String) = viewModelScope.launch {
+    fun onBtnRegisterClicked(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String,
+        passwordConfirm: String
+    ) = viewModelScope.launch {
         when {
-                TextUtils.isEmpty(firstName.trim {it <= ' '}) -> {
+            TextUtils.isEmpty(firstName.trim { it <= ' ' }) -> {
                 _uiEvent.emit(RegisterUiEvent.EnterFirstNameError)
                 return@launch
             }
-            TextUtils.isEmpty(lastName.trim {it <= ' '}) -> {
+            TextUtils.isEmpty(lastName.trim { it <= ' ' }) -> {
                 _uiEvent.emit(RegisterUiEvent.EnterLastNameError)
                 return@launch
             }
-            TextUtils.isEmpty(email.trim {it <= ' '}) -> {
+            TextUtils.isEmpty(email.trim { it <= ' ' }) -> {
                 _uiEvent.emit(RegisterUiEvent.EnterEmailError)
                 return@launch
             }
-            TextUtils.isEmpty(password.trim {it <= ' '}) -> {
+            TextUtils.isEmpty(password.trim { it <= ' ' }) -> {
                 _uiEvent.emit(RegisterUiEvent.EnterPassword)
                 return@launch
             }
-            (password.trim {it <= ' '} != passwordConfirm.trim {it <= ' '}) -> {
+            (password.trim { it <= ' ' } != passwordConfirm.trim { it <= ' ' }) -> {
                 _uiEvent.emit(RegisterUiEvent.PasswordNotMatch)
                 return@launch
             }
@@ -67,9 +73,9 @@ class RegisterViewModel @Inject constructor(
                     is FirebaseAuthClass.AuthorizationResult.Success -> {
                         val user = User(
                             authorizationResult.uid,
-                            firstName.trim {it <= ' '},
-                            lastName.trim {it <= ' '},
-                            email.trim {it <= ' '}
+                            firstName.trim { it <= ' ' },
+                            lastName.trim { it <= ' ' },
+                            email.trim { it <= ' ' }
                         )
                         val registrationResult = firestoreRepo.registerUser(user)
                         when (registrationResult) {
@@ -89,7 +95,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun userRegistrationSuccess() = viewModelScope.launch{
+    fun userRegistrationSuccess() = viewModelScope.launch {
         _uiEvent.emit(RegisterUiEvent.SignInUser)
     }
 

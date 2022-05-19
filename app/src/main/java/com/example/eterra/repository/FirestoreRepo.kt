@@ -2,6 +2,7 @@ package com.example.eterra.repository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.eterra.models.Address
 import com.example.eterra.models.CartItem
 import com.example.eterra.models.Product
 import com.example.eterra.models.User
@@ -263,6 +264,50 @@ class FirestoreRepo @Inject constructor() {
             e.printStackTrace()
             UpdateCartItemResult.Failure(e.message.toString())
         }
+    }
+
+    suspend fun addAddress(addressInfo: Address): AddToAddresses {
+        return try {
+            mFireStore.collection(Constants.ADDRESSES)
+                .document()
+                .set(addressInfo, SetOptions.merge())
+                .await()
+            AddToAddresses.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            AddToAddresses.Failure(e.message.toString())
+        }
+    }
+
+    suspend fun getAddressesList(): GetAddressesListResult {
+        return try {
+            val document = mFireStore.collection(Constants.ADDRESSES)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+            val list: ArrayList<Address> = ArrayList()
+
+            for (i in document) {
+                val addressItem = i.toObject(Address::class.java)
+                addressItem.id = i.id
+
+                list.add(addressItem)
+            }
+            GetAddressesListResult.Success(list)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetAddressesListResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class GetAddressesListResult {
+        data class Success(val cartList: ArrayList<Address>): GetAddressesListResult()
+        data class Failure(val errorMessage: String): GetAddressesListResult()
+    }
+
+    sealed class AddToAddresses {
+        object Success: AddToAddresses()
+        data class Failure(val errorMessage: String): AddToAddresses()
     }
 
     sealed class UpdateCartItemResult {

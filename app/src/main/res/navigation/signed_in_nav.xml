@@ -106,6 +106,15 @@
     <fragment
         android:id="@+id/addressListFragment"
         android:name="com.example.eterra.ui.addresslist.AddressListFragment"
-        android:label="fragment_address_list"
-        tools:layout="@layout/fragment_address_list" />
+        android:label="@string/lbl_addresses"
+        tools:layout="@layout/fragment_address_list">
+        <action
+            android:id="@+id/action_addressListFragment_to_addEditAddressFragment"
+            app:destination="@id/addEditAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditAddressFragment"
+        android:name="com.example.eterra.ui.addeditaddress.AddEditAddressFragment"
+        android:label="@string/lbl_add_address"
+        tools:layout="@layout/fragment_add_edit_fragment" />
 </navigation>

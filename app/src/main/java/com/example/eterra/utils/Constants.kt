@@ -4,6 +4,8 @@ package com.example.eterra.utils
 object Constants {
     const val USERS: String = "users"
     const val PRODUCTS: String = "products"
+    const val CART_ITEMS = "cart_items"
+    const val ADDRESSES: String = "addresses"
 
     const val PREFERENCES_TAG = "PreferencesManager"
     const val ETERRA_PREFERENCES = "ETerraPreferences"
@@ -25,8 +27,11 @@ object Constants {
     const val EXTRA_PRODUCT_OWNER_ID = "extra_product_owner_id"
 
     const val DEFAULT_CART_QUANTITY = "1"
-    const val CART_ITEMS = "cart_items"
     const val PRODUCT_ID = "product_id"
     const val CART_QUANTITY = "cart_quantity"
+
+    const val HOME = "Home"
+    const val OFFICE = "Office"
+    const val OTHER = "Other"
 
 }
