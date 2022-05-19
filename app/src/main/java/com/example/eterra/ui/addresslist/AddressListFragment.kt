@@ -1,7 +1,6 @@
 package com.example.eterra.ui.addresslist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -81,7 +80,8 @@ class AddressListFragment: BaseFragment(R.layout.fragment_address_list), Address
 
     override fun onAddressSelected(address: Address) {
         if (addressListPurpose == Constants.CHOOSE_ADDRESS) {
-            showErrorSnackBar("Selected address: $address", false)
+            val action = AddressListFragmentDirections.actionAddressListFragmentToCheckoutFragment()
+            findNavController().navigate(action)
         }
     }
 

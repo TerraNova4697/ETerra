@@ -96,4 +96,12 @@
     <string name="err_msg_enter_zip_code">Please enter zip code</string>
     <string name="title_select_address">Select Address</string>
 
+    <string name="title_checkout">Checkout</string>
+    <string name="checkout_lbl_product_items">Product Items</string>
+    <string name="checkout_lbl_selected_address">Selected Address</string>
+    <string name="checkout_lbl_items_receipt">Items Receipt</string>
+    <string name="lbl_payment_mode">Payment Mode</string>
+    <string name="lbl_cash_on_delivery">Cash On Delivery</string>
+    <string name="btn_lbl_place_order">PLACE ORDER</string>
+
 </resources>
