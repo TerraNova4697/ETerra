@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentDashboardBinding
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.SignedInActivity
 import com.example.eterra.ui.adapters.DashboardListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -30,6 +31,7 @@ class DashboardFragment: BaseFragment(R.layout.fragment_dashboard), DashboardLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDashboardBinding.bind(view)
+        (requireActivity() as SignedInActivity).bottomNavigationView.visibility = View.VISIBLE
 
         val dashboardListAdapter = DashboardListAdapter(this)
 
@@ -80,6 +82,7 @@ class DashboardFragment: BaseFragment(R.layout.fragment_dashboard), DashboardLis
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
+                (requireActivity() as SignedInActivity).bottomNavigationView.visibility = View.GONE
                 val action = DashboardFragmentDirections.actionItemDashboardToSettingsFragment()
                 findNavController().navigate(action)
                 true

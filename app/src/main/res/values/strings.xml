@@ -77,4 +77,8 @@
     <string name="action_cart">My Cart</string>
     <string name="lbl_out_of_stock">out of stock</string>
 
+    <string name="title_address_list">Address List</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="lbl_add_address">Add Address</string>
+
 </resources>
