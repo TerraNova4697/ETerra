@@ -14,6 +14,7 @@ import com.example.eterra.models.User
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.SignedInActivity
 import com.example.eterra.ui.login.MainActivity
+import com.example.eterra.utils.Constants
 import com.example.eterra.utils.GlideLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -50,7 +51,7 @@ class SettingsFragment(): BaseFragment(R.layout.fragment_settings) {
 //                settingsViewModel.onEditClicked()
             }
             llAddress.setOnClickListener {
-                val action = SettingsFragmentDirections.actionSettingsFragmentToAddressListFragment()
+                val action = SettingsFragmentDirections.actionSettingsFragmentToAddressListFragment(Constants.ADD_EDIT_ADDRESSES)
                 findNavController().navigate(action)
             }
         }

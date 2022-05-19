@@ -94,5 +94,6 @@
     <string name="err_msg_enter_full_name">Please enter full name</string>
     <string name="err_msg_enter_address">Please enter address</string>
     <string name="err_msg_enter_zip_code">Please enter zip code</string>
+    <string name="title_select_address">Select Address</string>
 
 </resources>

@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentCartListBinding
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.CartItemsListAdapter
+import com.example.eterra.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -36,6 +38,10 @@ class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
                 adapter = cartItemsListAdapter
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
+            }
+            btnCheckout.setOnClickListener {
+                val action = CartListFragmentDirections.actionCartListFragmentToAddressListFragment(Constants.CHOOSE_ADDRESS)
+                findNavController().navigate(action)
             }
         }
 

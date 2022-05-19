@@ -25,6 +25,7 @@ object Constants {
 
     const val EXTRA_PRODUCT_ID = "extra_product_id"
     const val EXTRA_PRODUCT_OWNER_ID = "extra_product_owner_id"
+    const val EXTRA_SELECT_ADDRESS = "extra_select_address"
 
     const val DEFAULT_CART_QUANTITY = "1"
     const val PRODUCT_ID = "product_id"
@@ -33,5 +34,9 @@ object Constants {
     const val HOME = "Home"
     const val OFFICE = "Office"
     const val OTHER = "Other"
+
+    const val ADDRESS_LIST_PURPOSE = "address_list_purpose"
+    const val CHOOSE_ADDRESS = "choose_address"
+    const val ADD_EDIT_ADDRESSES = "add_edit_addresses"
 
 }
