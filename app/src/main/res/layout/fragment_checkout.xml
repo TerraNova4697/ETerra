@@ -7,6 +7,7 @@
     android:background="@color/colorOffWhite"
     tools:context=".ui.checkout.CheckoutFragment">
 
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_checkout_activity"
         android:layout_width="match_parent"
@@ -139,6 +140,14 @@
                     android:textSize="@dimen/address_details_textSize"
                     tools:text="+7 701 123 45 67" />
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
 
             <com.example.eterra.utils.customviews.ETTextView
                 android:id="@+id/tv_items_receipt"

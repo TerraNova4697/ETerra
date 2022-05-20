@@ -131,5 +131,9 @@
         android:id="@+id/checkoutFragment"
         android:name="com.example.eterra.ui.checkout.CheckoutFragment"
         android:label="fragment_checkout"
-        tools:layout="@layout/fragment_checkout" />
+        tools:layout="@layout/fragment_checkout" >
+        <argument
+            android:name="extra_selected_address"
+            app:argType="com.example.eterra.models.Address" />
+    </fragment>
 </navigation>
