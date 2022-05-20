@@ -2,7 +2,9 @@ package com.example.eterra.ui.checkout
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +12,7 @@ import com.example.eterra.R
 import com.example.eterra.databinding.FragmentCheckoutBinding
 import com.example.eterra.models.Address
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.SignedInActivity
 import com.example.eterra.ui.adapters.CartItemsListAdapter
 import com.example.eterra.ui.products.ProductsViewModel
 import com.example.eterra.utils.Constants
@@ -23,6 +26,17 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
     private var address: Address? = null
     private val checkoutViewModel: CheckoutViewModel by viewModels()
     private lateinit var binding: FragmentCheckoutBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        (requireActivity() as SignedInActivity).supportActionBar?.hide()
+        (requireActivity() as SignedInActivity).bottomNavigationView.visibility = View.GONE
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -48,8 +62,9 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
                 tvCheckoutAddressType.text = address!!.type
                 tvCheckoutFullName.text = address!!.name
                 tvCheckoutAddress.text = "${address!!.address}, ${address!!.zipCode}"
-                tvCheckoutAdditionalNote.text = address!!.additionalNote
                 tvMobileNumber.text = address!!.mobileNumber
+                tvCheckoutAdditionalNote.text = address!!.additionalNote
+                tvCheckoutOtherDetails.text = address!!.otherDetails
             }
         }
 
