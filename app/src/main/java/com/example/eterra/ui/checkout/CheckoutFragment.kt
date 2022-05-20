@@ -2,24 +2,41 @@ package com.example.eterra.ui.checkout
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentCheckoutBinding
 import com.example.eterra.models.Address
 import com.example.eterra.ui.BaseFragment
+import com.example.eterra.ui.SignedInActivity
+import com.example.eterra.ui.adapters.CartItemsListAdapter
 import com.example.eterra.ui.products.ProductsViewModel
 import com.example.eterra.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class CheckoutFragment: BaseFragment(R.layout.fragment_checkout) {
+class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
+    CartItemsListAdapter.CartItemsClickListeners {
 
     private var address: Address? = null
     private val checkoutViewModel: CheckoutViewModel by viewModels()
     private lateinit var binding: FragmentCheckoutBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        (requireActivity() as SignedInActivity).supportActionBar?.hide()
+        (requireActivity() as SignedInActivity).bottomNavigationView.visibility = View.GONE
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -29,26 +46,33 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCheckoutBinding.bind(view)
+        val cartItemsListAdapter = CartItemsListAdapter(this, false)
 
         address = arguments?.getParcelable(Constants.EXTRA_SELECTED_ADDRESS)
+
+
+        binding.apply {
+//            rvCartListItems.adapter = cartItemsListAdapter
+            rvCartListItems.layoutManager = LinearLayoutManager(requireContext())
+            rvCartListItems.setHasFixedSize(true)
+        }
 
         if (address != null) {
             binding.apply {
                 tvCheckoutAddressType.text = address!!.type
                 tvCheckoutFullName.text = address!!.name
                 tvCheckoutAddress.text = "${address!!.address}, ${address!!.zipCode}"
-                tvCheckoutAdditionalNote.text = address!!.additionalNote
                 tvMobileNumber.text = address!!.mobileNumber
+                tvCheckoutAdditionalNote.text = address!!.additionalNote
+                tvCheckoutOtherDetails.text = address!!.otherDetails
             }
         }
 
-        checkoutViewModel.products.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                for (product in it) {
-                    Log.i(this@CheckoutFragment.javaClass.simpleName, product.toString())
-                }
-            } else {
-
+        checkoutViewModel.cartItems.observe(viewLifecycleOwner) {
+            cartItemsListAdapter.submitList(it)
+            binding.rvCartListItems.adapter = cartItemsListAdapter
+            for (item in it) {
+                Log.i(this@CheckoutFragment.javaClass.simpleName, item.toString())
             }
         }
 
@@ -67,6 +91,18 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout) {
                 }
             }
         }
+    }
+
+    override fun onDeleteClicked(cartId: String) {
+
+    }
+
+    override fun addOneItem(cartId: String, currentCartQuantity: String, stockQuantity: String) {
+
+    }
+
+    override fun removeOneItem(cartId: String, currentCartQuantity: String) {
+
     }
 
 }

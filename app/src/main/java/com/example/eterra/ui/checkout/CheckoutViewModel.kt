@@ -33,7 +33,17 @@ class CheckoutViewModel @Inject constructor(
             when (loadCartItemsResult) {
                 is FirestoreRepo.GetCartList.Success -> {
                     _cartItems.value = loadCartItemsResult.cartList
+                    for (product in _products.value!!) {
+                        for (cartItem in _cartItems.value!!) {
+                            if (product.id == cartItem.product_id) {
+                                cartItem.stock_quantity = product.quantity
 
+                                if (product.quantity.toInt() == 0) {
+                                    cartItem.cart_quantity = product.quantity
+                                }
+                            }
+                        }
+                    }
                 }
                 is FirestoreRepo.GetCartList.Failure -> {
                     _checkoutViewModelEvents.emit(CheckoutUiEvent.ErrorFetchingProducts(loadCartItemsResult.errorMessage))
