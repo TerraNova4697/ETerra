@@ -80,7 +80,7 @@ class AddressListFragment: BaseFragment(R.layout.fragment_address_list), Address
 
     override fun onAddressSelected(address: Address) {
         if (addressListPurpose == Constants.CHOOSE_ADDRESS) {
-            val action = AddressListFragmentDirections.actionAddressListFragmentToCheckoutFragment()
+            val action = AddressListFragmentDirections.actionAddressListFragmentToCheckoutFragment(address)
             findNavController().navigate(action)
         }
     }
