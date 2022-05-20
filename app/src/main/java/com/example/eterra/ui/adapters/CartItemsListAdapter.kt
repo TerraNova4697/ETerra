@@ -12,7 +12,8 @@ import com.example.eterra.models.CartItem
 import java.io.IOException
 
 class CartItemsListAdapter(
-    private val listener: CartItemsClickListeners
+    private val listener: CartItemsClickListeners,
+    private val updateCartItems: Boolean
 ): ListAdapter<CartItem, CartItemsListAdapter.CartItemsViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemsViewHolder {
@@ -41,6 +42,16 @@ class CartItemsListAdapter(
                 } else {
                     ibAddCartItem.visibility = View.VISIBLE
                     ibRemoveCartItem.visibility = View.VISIBLE
+                }
+
+                if (updateCartItems) {
+                    ibAddCartItem.visibility = View.VISIBLE
+                    ibRemoveCartItem.visibility = View.VISIBLE
+                    ibDeleteCartItem.visibility = View.VISIBLE
+                } else {
+                    ibAddCartItem.visibility = View.GONE
+                    ibRemoveCartItem.visibility = View.GONE
+                    ibDeleteCartItem.visibility = View.GONE
                 }
 
                 try {

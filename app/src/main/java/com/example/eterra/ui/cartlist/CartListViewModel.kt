@@ -33,7 +33,7 @@ class CartListViewModel @Inject constructor(
     val products = _products
 
     init {
-        collectCartItems()
+        collectProductItems()
     }
 
     private fun collectCartItems() {

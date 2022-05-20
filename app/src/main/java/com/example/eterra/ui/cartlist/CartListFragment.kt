@@ -30,7 +30,7 @@ class CartListFragment: BaseFragment(R.layout.fragment_cart_list),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCartListBinding.bind(view)
-        val cartItemsListAdapter = CartItemsListAdapter(this)
+        val cartItemsListAdapter = CartItemsListAdapter(this, true)
 
         binding.apply {
             tvShippingCharge.text = "$10.00"
