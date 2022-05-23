@@ -306,11 +306,32 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
-    suspend fun updateAllDetails(cartList: ArrayList<CartItem>): UpdateProductsResult {
+    suspend fun updateAllDetails(cartList: ArrayList<CartItem>, order: Order): UpdateProductsResult {
         val writeBatch = mFireStore.batch()
 
         return try {
             for (item in cartList) {
+
+                val soldProduct = SoldProduct(
+                    item.product_owner_id,
+                    item.title,
+                    item.price,
+                    item.cart_quantity,
+                    item.image,
+                    item.title,
+                    order.order_datetime,
+                    order.sub_total_amount,
+                    order.shipping_charge,
+                    order.total_amount,
+                    order.address
+                )
+
+                val document = mFireStore.collection(Constants.SOLD_PRODUCTS).document(item.product_id)
+
+                writeBatch.set(document, soldProduct)
+            }
+            for (item in cartList) {
+
                 val productHashMap = HashMap<String, Any>()
 
                 productHashMap[Constants.STOCK_QUANTITY] =
@@ -318,7 +339,7 @@ class FirestoreRepo @Inject constructor() {
 
                 val document = mFireStore.collection(Constants.PRODUCTS).document(item.product_id)
 
-                writeBatch.update(document, productHashMap)
+                writeBatch.set(document, productHashMap)
             }
             for (item in cartList) {
                 val document = mFireStore.collection(Constants.CART_ITEMS).document(item.id)

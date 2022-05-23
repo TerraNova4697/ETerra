@@ -115,5 +115,8 @@
     <string name="order_status_in_process">In Process</string>
     <string name="order_status_delivered">Delivered</string>
     <string name="order_details_lbl_shipping_address">Shipping Address</string>
+    
+    <string name="title_sold_products">Sold Products</string>
+    <string name="no_products_sold_yet">No Products Sold Yet</string>
 
 </resources>

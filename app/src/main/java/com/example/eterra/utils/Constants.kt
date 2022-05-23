@@ -7,6 +7,7 @@ object Constants {
     const val CART_ITEMS = "cart_items"
     const val ADDRESSES: String = "addresses"
     const val ORDER: String = "order"
+    const val SOLD_PRODUCTS: String = "sold_products"
 
     const val PREFERENCES_TAG = "PreferencesManager"
     const val ETERRA_PREFERENCES = "ETerraPreferences"
