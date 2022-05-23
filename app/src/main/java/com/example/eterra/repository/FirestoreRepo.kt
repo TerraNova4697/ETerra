@@ -375,6 +375,33 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun getSoldProductsList(): GetSoldProductsListResult {
+        return try {
+            val document = mFireStore.collection(Constants.SOLD_PRODUCTS)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+
+            val list: ArrayList<SoldProduct> = ArrayList()
+
+            for (i in document) {
+                val soldProduct = i.toObject(SoldProduct::class.java)
+                soldProduct.id = i.id
+
+                list.add(soldProduct)
+            }
+            GetSoldProductsListResult.Success(list)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetSoldProductsListResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class GetSoldProductsListResult {
+        data class Success(val ordersList: ArrayList<SoldProduct>): GetSoldProductsListResult()
+        data class Failure(val errorMessage: String): GetSoldProductsListResult()
+    }
+
     sealed class GetOrdersListResult {
         data class Success(val ordersList: ArrayList<Order>): GetOrdersListResult()
         data class Failure(val errorMessage: String): GetOrdersListResult()
