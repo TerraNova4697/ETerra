@@ -2,10 +2,7 @@ package com.example.eterra.repository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.eterra.models.Address
-import com.example.eterra.models.CartItem
-import com.example.eterra.models.Product
-import com.example.eterra.models.User
+import com.example.eterra.models.*
 import com.example.eterra.ui.login.LoginViewModel
 import com.example.eterra.ui.register.RegisterViewModel
 import com.example.eterra.utils.Constants
@@ -298,6 +295,24 @@ class FirestoreRepo @Inject constructor() {
             e.printStackTrace()
             GetAddressesListResult.Failure(e.message.toString())
         }
+    }
+
+    suspend fun placeOrder(order: Order): PlaceOrderResult {
+        return try {
+            mFireStore.collection(Constants.ORDER)
+                .document()
+                .set(order, SetOptions.merge())
+                .await()
+            PlaceOrderResult.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            PlaceOrderResult.Failure(e.message ?: "Something went wrong")
+        }
+    }
+
+    sealed class PlaceOrderResult {
+        object Success: PlaceOrderResult()
+        data class Failure(val errorMessage: String): PlaceOrderResult()
     }
 
     sealed class GetAddressesListResult {

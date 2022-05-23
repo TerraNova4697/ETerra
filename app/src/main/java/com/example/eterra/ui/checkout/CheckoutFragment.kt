@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentCheckoutBinding
@@ -55,6 +56,13 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
 //            rvCartListItems.adapter = cartItemsListAdapter
             rvCartListItems.layoutManager = LinearLayoutManager(requireContext())
             rvCartListItems.setHasFixedSize(true)
+            binding.apply {
+                btnPlaceOrder.setOnClickListener {
+                    if (address != null) {
+                        checkoutViewModel.onPlaceOrderClicked(address!!)
+                    }
+                }
+            }
         }
 
         if (address != null) {
@@ -62,7 +70,7 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
                 tvCheckoutAddressType.text = address!!.type
                 tvCheckoutFullName.text = address!!.name
                 tvCheckoutAddress.text = "${address!!.address}, ${address!!.zipCode}"
-                tvMobileNumber.text = address!!.mobileNumber
+                tvCheckoutMobileNumber.text = address!!.mobileNumber
                 tvCheckoutAdditionalNote.text = address!!.additionalNote
                 tvCheckoutOtherDetails.text = address!!.otherDetails
             }
@@ -76,6 +84,19 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
             }
         }
 
+        checkoutViewModel.subtotal.observe(viewLifecycleOwner) {
+            binding.apply {tvCheckoutSubTotal.text = "$${it.toString()}"}
+        }
+
+        checkoutViewModel.shippingCharge.observe(viewLifecycleOwner) {
+            binding.apply { tvCheckoutShippingCharge.text = "$${it.toString()}" }
+        }
+
+        checkoutViewModel.total.observe(viewLifecycleOwner) {
+            binding.apply { tvCheckoutTotalAmount.text = "$${it.toString()}" }
+        }
+
+
         lifecycleScope.launchWhenCreated {
             checkoutViewModel.checkoutViewModelEvents.collect { event ->
                 when (event) {
@@ -87,6 +108,13 @@ class CheckoutFragment: BaseFragment(R.layout.fragment_checkout),
                     }
                     is CheckoutViewModel.CheckoutUiEvent.HideProgressBar -> {
                         hideProgressBar(binding.progressBar)
+                    }
+                    is CheckoutViewModel.CheckoutUiEvent.NotifyUser -> {
+                        showErrorSnackBar(event.message, false)
+                    }
+                    is CheckoutViewModel.CheckoutUiEvent.NavigateToDashboard -> {
+                        val action = CheckoutFragmentDirections.actionCheckoutFragmentToItemDashboard()
+                        findNavController().navigate(action)
                     }
                 }
             }
