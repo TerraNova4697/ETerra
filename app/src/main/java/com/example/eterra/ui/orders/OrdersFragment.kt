@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentOrdersBinding
+import com.example.eterra.models.Order
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.OrdersListAdapter
 import com.example.eterra.ui.adapters.ProductsListAdapter
@@ -14,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class OrdersFragment(): BaseFragment(R.layout.fragment_orders), ProductsListAdapter.AdapterClickListener {
+class OrdersFragment(): BaseFragment(R.layout.fragment_orders), OrdersListAdapter.AdapterClickListener {
 
     private lateinit var binding: FragmentOrdersBinding
     private val ordersViewModel: OrdersViewModel by viewModels()
@@ -28,7 +30,7 @@ class OrdersFragment(): BaseFragment(R.layout.fragment_orders), ProductsListAdap
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentOrdersBinding.bind(view)
 
-        val ordersListAdapter = OrdersListAdapter()
+        val ordersListAdapter = OrdersListAdapter(this)
 
         binding.apply {
             rvOrdersItems.apply {
@@ -75,8 +77,9 @@ class OrdersFragment(): BaseFragment(R.layout.fragment_orders), ProductsListAdap
         TODO("Not yet implemented")
     }
 
-    override fun onProductClicked(productId: String, ownerId: String) {
-        TODO("Not yet implemented")
+    override fun onProductClicked(order: Order) {
+        val action = OrdersFragmentDirections.actionItemOrdersToMyOrderDetailsFragment(order)
+        findNavController().navigate(action)
     }
 
 }
