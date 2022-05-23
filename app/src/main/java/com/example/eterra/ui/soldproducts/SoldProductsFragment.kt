@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.eterra.R
 import com.example.eterra.databinding.FragmentSoldProductsBinding
+import com.example.eterra.models.SoldProduct
 import com.example.eterra.ui.BaseFragment
 import com.example.eterra.ui.adapters.SoldProductsListAdapter
-import com.example.eterra.ui.orders.OrdersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class SoldProductsFragment: BaseFragment(R.layout.fragment_sold_products) {
+class SoldProductsFragment: BaseFragment(R.layout.fragment_sold_products),  SoldProductsListAdapter.AdapterClickListener{
 
     private lateinit var binding: FragmentSoldProductsBinding
     private val soldProductsViewModel: SoldProductsViewModel by viewModels()
@@ -28,7 +29,7 @@ class SoldProductsFragment: BaseFragment(R.layout.fragment_sold_products) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSoldProductsBinding.bind(view)
 
-        val soldProductsListAdapter = SoldProductsListAdapter()
+        val soldProductsListAdapter = SoldProductsListAdapter(this)
 
         binding.apply {
             rvSoldProducts.apply {
@@ -69,6 +70,11 @@ class SoldProductsFragment: BaseFragment(R.layout.fragment_sold_products) {
                 }
             }
         }
+    }
+
+    override fun onProductClicked(soldProduct: SoldProduct) {
+        val action = SoldProductsFragmentDirections.actionItemSoldProductsToSoldProductDetailsFragment(soldProduct)
+        findNavController().navigate(action)
     }
 
 }

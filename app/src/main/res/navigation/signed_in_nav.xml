@@ -158,5 +158,18 @@
         android:id="@+id/item_sold_products"
         android:name="com.example.eterra.ui.soldproducts.SoldProductsFragment"
         android:label="@string/title_sold_products"
-        tools:layout="@layout/fragment_sold_products" />
+        tools:layout="@layout/fragment_sold_products" >
+        <action
+            android:id="@+id/action_item_sold_products_to_soldProductDetailsFragment"
+            app:destination="@id/soldProductDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/soldProductDetailsFragment"
+        android:name="com.example.eterra.ui.soldproductdetails.SoldProductDetailsFragment"
+        android:label="fragment_sold_product_details"
+        tools:layout="@layout/fragment_sold_product_details" >
+        <argument
+            android:name="extra_sold_product_details"
+            app:argType="com.example.eterra.models.SoldProduct" />
+    </fragment>
 </navigation>

@@ -118,5 +118,7 @@
     
     <string name="title_sold_products">Sold Products</string>
     <string name="no_products_sold_yet">No Products Sold Yet</string>
+    
+    <string name="title_sold_product_details">Details</string>
 
 </resources>
