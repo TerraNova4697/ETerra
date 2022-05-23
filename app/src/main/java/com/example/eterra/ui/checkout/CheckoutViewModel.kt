@@ -111,9 +111,17 @@ class CheckoutViewModel @Inject constructor(
         )
         when(val placeOrderResult = firestoreRepo.placeOrder(order)) {
             is FirestoreRepo.PlaceOrderResult.Success -> {
-                _checkoutViewModelEvents.emit(CheckoutUiEvent.HideProgressBar)
-                _checkoutViewModelEvents.emit(CheckoutUiEvent.NotifyUser("Your order was placed successfully."))
-                _checkoutViewModelEvents.emit(CheckoutUiEvent.NavigateToDashboard)
+                when (val updateProductDetailsResult = firestoreRepo.updateAllDetails(ArrayList(cartItems.value!!))) {
+                    is FirestoreRepo.UpdateProductsResult.Success -> {
+                        _checkoutViewModelEvents.emit(CheckoutUiEvent.HideProgressBar)
+                        _checkoutViewModelEvents.emit(CheckoutUiEvent.NotifyUser("Your order was placed successfully."))
+                        _checkoutViewModelEvents.emit(CheckoutUiEvent.NavigateToDashboard)
+                    }
+                    is FirestoreRepo.UpdateProductsResult.Failure -> {
+                        _checkoutViewModelEvents.emit(CheckoutUiEvent.ErrorFetchingProducts(updateProductDetailsResult.errorMessage))
+                        _checkoutViewModelEvents.emit(CheckoutUiEvent.HideProgressBar)
+                    }
+                }
             }
             is FirestoreRepo.PlaceOrderResult.Failure -> {
                 _checkoutViewModelEvents.emit(CheckoutUiEvent.ErrorFetchingProducts(placeOrderResult.errorMessage))

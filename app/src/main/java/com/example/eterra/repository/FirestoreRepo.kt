@@ -310,6 +310,37 @@ class FirestoreRepo @Inject constructor() {
         }
     }
 
+    suspend fun updateAllDetails(cartList: ArrayList<CartItem>): UpdateProductsResult {
+        val writeBatch = mFireStore.batch()
+
+        return try {
+            for (item in cartList) {
+                val productHashMap = HashMap<String, Any>()
+
+                productHashMap[Constants.STOCK_QUANTITY] =
+                    (item.stock_quantity.toInt() - item.cart_quantity.toInt()).toString()
+
+                val document = mFireStore.collection(Constants.PRODUCTS).document(item.product_id)
+
+                writeBatch.update(document, productHashMap)
+            }
+            for (item in cartList) {
+                val document = mFireStore.collection(Constants.CART_ITEMS).document(item.id)
+                writeBatch.delete(document)
+            }
+            writeBatch.commit().await()
+            UpdateProductsResult.Success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            UpdateProductsResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class UpdateProductsResult {
+        object Success: UpdateProductsResult()
+        data class Failure(val errorMessage: String): UpdateProductsResult()
+    }
+
     sealed class PlaceOrderResult {
         object Success: PlaceOrderResult()
         data class Failure(val errorMessage: String): PlaceOrderResult()
