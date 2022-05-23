@@ -135,5 +135,10 @@
         <argument
             android:name="extra_selected_address"
             app:argType="com.example.eterra.models.Address" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_item_dashboard"
+            app:destination="@id/item_dashboard"
+            app:popUpTo="@+id/signed_in_nav"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
