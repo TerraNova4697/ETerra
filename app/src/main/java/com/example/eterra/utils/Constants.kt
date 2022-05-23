@@ -28,6 +28,7 @@ object Constants {
     const val EXTRA_PRODUCT_OWNER_ID = "extra_product_owner_id"
     const val EXTRA_SELECT_ADDRESS = "extra_select_address"
     const val EXTRA_SELECTED_ADDRESS = "extra_selected_address"
+    const val EXTRA_MY_ORDER_DETAILS = "extra_my_order_details"
 
     const val DEFAULT_CART_QUANTITY = "1"
     const val PRODUCT_ID = "product_id"

@@ -10,7 +10,12 @@ import com.example.eterra.databinding.ItemProductBinding
 import com.example.eterra.models.Order
 import java.io.IOException
 
-class OrdersListAdapter(): ListAdapter<Order, OrdersListAdapter.OrderViewHolder>(DiffCallback())  {
+class OrdersListAdapter(private val listener: AdapterClickListener): ListAdapter<Order, OrdersListAdapter.OrderViewHolder>(DiffCallback())  {
+
+    interface AdapterClickListener {
+        fun onProductDeleteClickListener(productId: String)
+        fun onProductClicked(order: Order)
+    }
 
     inner class OrderViewHolder(
         private val binding: ItemProductBinding
@@ -30,9 +35,9 @@ class OrdersListAdapter(): ListAdapter<Order, OrdersListAdapter.OrderViewHolder>
 //            binding.ibDelete.setOnClickListener {
 //                listener.onProductDeleteClickListener(product.id)
 //            }
-//            binding.root.setOnClickListener {
-//                listener.onProductClicked(product.id, product.user_id)
-//            }
+            binding.root.setOnClickListener {
+                listener.onProductClicked(order)
+            }
         }
 
     }

@@ -47,7 +47,11 @@
         android:id="@+id/item_orders"
         android:name="com.example.eterra.ui.orders.OrdersFragment"
         android:label="@string/orders"
-        tools:layout="@layout/fragment_orders" />
+        tools:layout="@layout/fragment_orders" >
+        <action
+            android:id="@+id/action_item_orders_to_myOrderDetailsFragment"
+            app:destination="@id/myOrderDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/item_dashboard"
         android:name="com.example.eterra.ui.dashboard.DashboardFragment"
@@ -140,5 +144,14 @@
             app:destination="@id/item_dashboard"
             app:popUpTo="@+id/signed_in_nav"
             app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/myOrderDetailsFragment"
+        android:name="com.example.eterra.ui.myorderdetails.MyOrderDetailsFragment"
+        android:label="fragment_my_order_details"
+        tools:layout="@layout/fragment_my_order_details" >
+        <argument
+            android:name="extra_my_order_details"
+            app:argType="com.example.eterra.models.Order" />
     </fragment>
 </navigation>
