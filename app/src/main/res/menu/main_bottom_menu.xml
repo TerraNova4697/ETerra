@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_vector_orders"
         android:title="@string/orders"/>
 
+    <item
+        android:id="@+id/item_sold_products"
+        android:icon="@drawable/ic_sold"
+        android:title="@string/title_sold_products"/>
+
 </menu>
