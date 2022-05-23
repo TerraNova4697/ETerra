@@ -1,15 +1,11 @@
 package com.example.eterra.repository
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import com.example.eterra.models.*
-import com.example.eterra.ui.login.LoginViewModel
-import com.example.eterra.ui.register.RegisterViewModel
 import com.example.eterra.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -334,6 +330,33 @@ class FirestoreRepo @Inject constructor() {
             e.printStackTrace()
             UpdateProductsResult.Failure(e.message.toString())
         }
+    }
+
+    suspend fun getOrdersList(): GetOrdersListResult {
+        return try {
+            val document = mFireStore.collection(Constants.ORDER)
+                .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+                .get()
+                .await()
+
+            val list: ArrayList<Order> = ArrayList()
+
+            for (i in document) {
+                val order = i.toObject(Order::class.java)
+                order.id = i.id
+
+                list.add(order)
+            }
+            GetOrdersListResult.Success(list)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            GetOrdersListResult.Failure(e.message.toString())
+        }
+    }
+
+    sealed class GetOrdersListResult {
+        data class Success(val ordersList: ArrayList<Order>): GetOrdersListResult()
+        data class Failure(val errorMessage: String): GetOrdersListResult()
     }
 
     sealed class UpdateProductsResult {

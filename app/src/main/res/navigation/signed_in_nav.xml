@@ -45,9 +45,9 @@
     </fragment>
     <fragment
         android:id="@+id/item_orders"
-        android:name="com.example.eterra.ui.notifications.OrdersFragment"
+        android:name="com.example.eterra.ui.orders.OrdersFragment"
         android:label="@string/orders"
-        tools:layout="@layout/orders_fragment" />
+        tools:layout="@layout/fragment_orders" />
     <fragment
         android:id="@+id/item_dashboard"
         android:name="com.example.eterra.ui.dashboard.DashboardFragment"
