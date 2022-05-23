@@ -42,7 +42,7 @@ class ProductDetailsFragment: BaseFragment(R.layout.fragment_product_details) {
 
         binding.apply {
             btnAddToCard.setOnClickListener {
-                productDetailsViewModel.onAddToCartClicked(productDetails, productId)
+                productDetailsViewModel.onAddToCartClicked(productDetails, productId, ownerId)
             }
             btnGoToCart.setOnClickListener {
                 val action = ProductDetailsFragmentDirections.actionProductDetailsFragmentToCartListFragment()

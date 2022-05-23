@@ -41,9 +41,10 @@ class ProductDetailsViewModel @Inject constructor(
 
     }
 
-    fun onAddToCartClicked(productDetails: Product, productId: String) = viewModelScope.launch{
+    fun onAddToCartClicked(productDetails: Product, productId: String, ownerId: String) = viewModelScope.launch{
         val cartItem = CartItem(
             user_id = firestoreRepo.getCurrentUserId(),
+            product_owner_id = ownerId,
             product_id = productId,
             title = productDetails.title,
             price = productDetails.price,
