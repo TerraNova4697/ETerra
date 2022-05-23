@@ -39,6 +39,10 @@ object Constants {
     const val OFFICE = "Office"
     const val OTHER = "Other"
 
+    const val DELIVERY_STATUS_IN_PROCESS = "In Process"
+    const val DELIVERY_STATUS_PENDING = "Pending"
+    const val DELIVERY_STATUS_DELIVERED = "Delivered"
+
     const val ADDRESS_LIST_PURPOSE = "address_list_purpose"
     const val CHOOSE_ADDRESS = "choose_address"
     const val ADD_EDIT_ADDRESSES = "add_edit_addresses"
