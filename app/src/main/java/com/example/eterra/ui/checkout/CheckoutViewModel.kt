@@ -9,6 +9,7 @@ import com.example.eterra.models.CartItem
 import com.example.eterra.models.Order
 import com.example.eterra.models.Product
 import com.example.eterra.repository.FirestoreRepo
+import com.example.eterra.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -107,7 +108,9 @@ class CheckoutViewModel @Inject constructor(
             cartItems.value!![0].image,
             subtotal.value.toString(),
             shippingCharge.value.toString(),
-            total.value.toString()
+            total.value.toString(),
+            System.currentTimeMillis(),
+            Constants.DELIVERY_STATUS_IN_PROCESS
         )
         when(val placeOrderResult = firestoreRepo.placeOrder(order)) {
             is FirestoreRepo.PlaceOrderResult.Success -> {
